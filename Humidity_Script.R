@@ -1,5 +1,5 @@
 #########################################################################################################################################
-# Autor: Greg CHISM
+# Author: GREG CHISM
 # Date: Nov 2021
 # email: gchism@email.arizona.edu
 # Project: "Temnothorax rugatulus" ants do not change their nest walls in response to environmental humidity 
@@ -17,6 +17,21 @@ pacman::p_load(ggpubr, #Loading required packages for code below. p_load() will 
                pwr,
                scales,
                tidyverse)
+
+#########################################################################################################################################
+# IMPORTING THE REQUIRED DATASETS TO RUN THE BELOW SCRIPTS
+#########################################################################################################################################
+# Main database with nest wall properties 
+HumidityExperimentalDatabase <- read.csv("HumidityExperimentalDatabase.csv")
+
+# Supplemental database with relative humidity (%) and temperature (celcius) values from experimental container
+SupplementalHygrometerDatabase <- read.csv("SupplementalHygrometerDatabase.csv")
+
+# Database showing the number of workers and brood that died after each colony was exposed to their first relative humidity (%) trial
+HumidMortalityRaw <- read.csv("HumidMortalityRaw.csv")
+
+# Porosity values for all substrates
+PorosityComparison <- read.csv("PorosityComparison.csv")
 
 #########################################################################################################################################
 # MEAN HUMIDITY VALUES 
