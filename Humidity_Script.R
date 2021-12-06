@@ -1297,19 +1297,19 @@ ggplot(PorosityComparison, aes(x = reorder(SubCategory, Porosity, FUN = median),
 
 # Wilcoxon signed rank tests that compare artificial and natural nest substrate porosities
 # Substrate I v. Substrate II
-wilcox.test(PorosityComparisonI$PorosityII, PorosityComparisonII$PorosityII, paired = FALSE, alternative = "two.sided")
+wilcox.test(PorosityComparisonI$Porosity, PorosityComparisonII$Porosity, paired = FALSE, alternative = "two.sided")
 
 # Substrate I v. Natural
-wilcox.test(PorosityComparisonI$PorosityII, PorosityComparisonNat$PorosityII, paired = FALSE, alternative = "two.sided")
+wilcox.test(PorosityComparisonI$Porosity, PorosityComparisonNat$Porosity, paired = FALSE, alternative = "two.sided")
 
 # Substrate II v. Natural
-wilcox.test(PorosityComparisonII$PorosityII, PorosityComparisonNat$PorosityII, paired = FALSE, alternative = "two.sided")
+wilcox.test(PorosityComparisonII$Porosity, PorosityComparisonNat$Porosity, paired = FALSE, alternative = "two.sided")
 
 # Substrate I v. Built
-wilcox.test(PorosityComparisonI$PorosityII, PorosityComparisonBuilt$PorosityII, paired = FALSE, alternative = "two.sided")
+wilcox.test(PorosityComparisonI$Porosity, PorosityComparisonBuilt$Porosity, paired = FALSE, alternative = "two.sided")
 
 #Substrate II v. Built 
-wilcox.test(PorosityComparisonII$PorosityII, PorosityComparisonBuilt$PorosityII, paired = FALSE, alternative = "two.sided")
+wilcox.test(PorosityComparisonII$Porosity, PorosityComparisonBuilt$Porosity, paired = FALSE, alternative = "two.sided")
 
 #Natural v. Built
-wilcox.test(PorosityComparisonNat$PorosityII,PorosityComparisonBuilt$PorosityII, paired = FALSE, alternative = "two.sided")
+wilcox.test(PorosityComparisonNat$Porosity,PorosityComparisonBuilt$Porosity, paired = FALSE, alternative = "two.sided")
