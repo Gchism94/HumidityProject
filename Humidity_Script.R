@@ -9,11 +9,13 @@
 # The below script was utilized to analyze and visualize data from the associated manuscript.
 # The associated databases are "HumidityExperimentDatabase.csv", "SupplementalHygrometerDatabase.csv", "and"HumidMortality.csv", and "PorosityComparison.csv" 
 
+# MUST RUN THE NEXT TWO LINES (PARTICULARLY PACMAN) BEFORE ANY OTHER! 
 # Installing and loading packages used for graphs and analyses
-install.packages("pacman") #Download package with function to load multiple packaged at once
+install.packages("pacman") # Download package with function to load multiple packaged at once
 
-#Loading required packages for code below. p_load() will download packages that aren't in system library
-pacman::p_load(ggpubr, #Loading required packages for code below. p_load() will download packages that aren't in system library
+# Loading required packages for code below. p_load() will download packages that aren't in system library
+pacman::p_load(fsa,
+               ggpubr, 
                pwr,
                scales,
                tidyverse)
@@ -70,14 +72,16 @@ SupplementalHygrometerDatabaseReduced %>%
 Complete_Data_final_Trial1 <- HumidityExperimentalDatabase %>%
   filter(Trial == 1) %>% 
   #Calculate nest wall density: If wall volume isn't 0, then calculate by dividing wall weight and wall volume, else 0
-  mutate(Density = ifelse(Volume != 0, CollWallWt / Volume, 0)) %>%
+  mutate(Density = ifelse(Volume != 0, CollWallWt / Volume, 0),
+         PropIWall = 1 - PropIIWall) %>%
   left_join(SupplementalHygrometerDatabaseReduced)
 
 # Same procedure as above but for trial 2
 Complete_Data_final_Trial2 <- HumidityExperimentalDatabase %>%
   filter(Trial == 2) %>% 
   #Calculate nest wall density: If wall volume isn't 0, then calculate by dividing wall weight and wall volume, else 0
-  mutate(Density = ifelse(Volume != 0, CollWallWt / Volume, 0)) %>%
+  mutate(Density = ifelse(Volume != 0, CollWallWt / Volume, 0),
+         PropIWall = 1 - PropIIWall) %>%
   left_join(SupplementalHygrometerDatabaseReduced)
 
 #########################################################################################################################################
@@ -86,57 +90,12 @@ Complete_Data_final_Trial2 <- HumidityExperimentalDatabase %>%
 # The script also finds the median ratio of substrate II used in wall building for both trials
 #########################################################################################################################################
 
-# Binomial test to determine if colonies preferred substrate II
-# Here we first distinguish a success as having a wall composed with greater than 50% of substrate II 
-Complete_Data_final_Trial1 %>% 
-  group_by(Colony) %>%
-  mutate(SubPrefer = ifelse(PropIIWall > 0.5, 1, 0)) %>%
-  select(c(SubPrefer)) %>%
-  ungroup() %>%
-  filter(SubPrefer == "1") %>%
-  summarise(n = n())
-# Produces 18 successes and 1 failure, which will be successes (x) for the binomial test 
+# Mann-Whitney U tests to determine building substrate preference
+# Trial 1
+wilcox.test(Complete_Data_final_Trial1$PropIIWall, Complete_Data_final_Trial1$PropIWall, paired = FALSE)
 
-# Binomial test with 18 successes across 19 observations
-binom.test(18, 19, p = 0.5)
-
-# Same procedure as above but for trial 2
-Complete_Data_final_Trial2%>% 
-  group_by(Colony) %>%
-  mutate(SubPrefer = ifelse(PropIIWall > 0.5, 1, 0)) %>%
-  select(c(SubPrefer)) %>%
-  ungroup() %>%
-  filter(SubPrefer == "1") %>%
-  summarise(n = n())
-# Produces 14 successes and 2 failures, which will be successes (x) for the binomial test
-
-# Binomial test with 28 successes across 30 observations
-binom.test(14, 16, p = 0.5)
-
-# Binomial test to determine if a side bias was observed
-# Here we first distinguish a success as choosing primarily substrate II with substrate I on the left side 
-Complete_Data_final_Trial1 %>%
-  mutate(SideChoice = ifelse(SubstrateISide == "L" & PropIIWall > 0.5, 1, 0)) %>%
-  select(c(SideChoice)) %>%
-  ungroup() %>%
-  filter(SideChoice == "1") %>%
-  summarise(n = n())
-# Produces 9 successes and 10 failures, which will be successes (x) for the binomial test
-
-# Binomial test with 9 successes across 19 observations
-binom.test(9, 19, p = 0.5)
-
-# Same procedure as above but for trial 2
-Complete_Data_final_Trial2 %>%
-  mutate(SideChoice = ifelse(SubstrateISide == "L" & PropIIWall > 0.5, 1, 0)) %>%
-  select(c(SideChoice)) %>%
-  ungroup() %>%
-  filter(SideChoice == "1") %>%
-  summarise(n = n())
-# Produces 7 successes and 9 failures, which will be successes (x) for the binomial test
-
-# Binomial test with 7 successes across 16 observations
-binom.test(7, 16, p = 0.5)
+# Trial 2
+wilcox.test(Complete_Data_final_Trial2$PropIIWall, Complete_Data_final_Trial2$PropIWall, paired = FALSE)
 
 # Median amount of substrate I and substrate II used to build walls, and the median ratio 
 # Trial 1
@@ -164,16 +123,15 @@ pwr.f2.test(u = 2, v = 16, f2 = 0.02, sig.level = 0.05)
 pwr.f2.test(u = 2, v = 16, f2 = 0.15, sig.level = 0.05)
 pwr.f2.test(u = 2, v = 16, f2 = 0.35, sig.level = 0.05)
 
-#Trial 2
+# Trial 2
 pwr.f2.test(u = 2, v = 14, f2 = 0.02, sig.level = 0.05)
 pwr.f2.test(u = 2, v = 14, f2 = 0.15, sig.level = 0.05)
 pwr.f2.test(u = 2, v = 14, f2 = 0.35, sig.level = 0.05)
 
-# Calculating required sample size for 80% conventional statistical power (Cohen 2013)
-# Remove v and include power (Power of test - 1 minus Type II error probability)
-pwr.f2.test(u = 2, f2 = 0.02, sig.level = 0.05, power = 0.8)
-pwr.f2.test(u = 2, f2 = 0.15, sig.level = 0.05, power = 0.8)
-pwr.f2.test(u = 2, f2 = 0.35, sig.level = 0.05, power = 0.8)
+# Calculating the effect size of our trials with 80% conventional statistical power (Cohen 2013)
+# Remove f2 and include power (Power of test - 1 minus Type II error probability)
+pwr.f2.test(u = 2, v = 16, sig.level = 0.05, power = 0.8)
+pwr.f2.test(u = 2, v = 14, sig.level = 0.05, power = 0.8)
 
 #########################################################################################################################################
 # RELATIVE HUMIDITY AND BOTH NEST WALL FEATURES AND INTERNAL NEST AREA: PLOTS AND ANALYSES
@@ -705,13 +663,10 @@ pwr.r.test(n = 17, r = 0.1, sig.level = 0.05, alternative = "two.sided")
 pwr.r.test(n = 17, r = 0.3, sig.level = 0.05, alternative = "two.sided")
 pwr.r.test(n = 17, r = 0.5, sig.level = 0.05, alternative = "two.sided")
 
-# Needed sample size
-pwr.r.test(r = 0.1, sig.level = 0.05, power = 0.8, alternative = "two.sided")
-pwr.r.test(r = 0.3, sig.level = 0.05, power = 0.8, alternative = "two.sided")
-pwr.r.test(r = 0.5, sig.level = 0.05, power = 0.8, alternative = "two.sided")
+# Calculating the effect size of our trials with 80% conventional statistical power (Cohen 2013)
+pwr.r.test(n = 19, sig.level = 0.05, power = 0.8, alternative = "two.sided")
+pwr.r.test(n = 17, sig.level = 0.05, power = 0.8, alternative = "two.sided")
 
-# Needed effect size
-pwr.r.test(r = 0.6, sig.level = 0.05, power = 0.8, alternative = "two.sided")
 
 #########################################################################################################################################
 # COLONY SIZE BOTH NEST WALL FEATURES AND INTERNAL NEST AREA: PLOTS AND ANALYSES
@@ -1283,7 +1238,7 @@ ggplot(PorosityComparison, aes(x = reorder(SubCategory, Porosity, FUN = median),
   geom_boxplot(coef = 200, lwd = 0.55) +
   geom_bracket(
     xmin = c("Sub I", "Sub I", "Sub I", "Sub II", "Built", "Built"), xmax = c("Sub II", "Natural", "Built", "Natural", "Sub II", "Natural"),
-    y.position = c(58, 62, 54, 43, 46.5, 51), label = c("***", "***", "***", "NS", "NS", "NS"),
+    y.position = c(90, 87, 84, 73, 77, 81), label = c("***", "***", "***", "NS", "NS", "NS"),
     tip.length = 0.01, size = 0.65, label.size = 6, family = "Arial") +
   ggtitle("Porosity comparison") +
   xlab("Substrate category") +
@@ -1295,21 +1250,8 @@ ggplot(PorosityComparison, aes(x = reorder(SubCategory, Porosity, FUN = median),
         axis.title.y = element_text(size = 22, family = "Arial", color = "black"),
         axis.title.x = element_text(size = 22, family = "Arial", color = "black")) 
 
-# Wilcoxon signed rank tests that compare artificial and natural nest substrate porosities
-# Substrate I v. Substrate II
-wilcox.test(PorosityComparisonI$Porosity, PorosityComparisonII$Porosity, paired = FALSE, alternative = "two.sided")
+# Kruskal-Wallis test to compare artificial and natural nest substrate porosities
+kruskal.test(PorosityComparison$SubCategory, PorosityComparison$Porosity)
 
-# Substrate I v. Natural
-wilcox.test(PorosityComparisonI$Porosity, PorosityComparisonNat$Porosity, paired = FALSE, alternative = "two.sided")
-
-# Substrate II v. Natural
-wilcox.test(PorosityComparisonII$Porosity, PorosityComparisonNat$Porosity, paired = FALSE, alternative = "two.sided")
-
-# Substrate I v. Built
-wilcox.test(PorosityComparisonI$Porosity, PorosityComparisonBuilt$Porosity, paired = FALSE, alternative = "two.sided")
-
-#Substrate II v. Built 
-wilcox.test(PorosityComparisonII$Porosity, PorosityComparisonBuilt$Porosity, paired = FALSE, alternative = "two.sided")
-
-#Natural v. Built
-wilcox.test(PorosityComparisonNat$Porosity,PorosityComparisonBuilt$Porosity, paired = FALSE, alternative = "two.sided")
+# Post-hoc Dunn's test for multiple comparisons, using the Benjamini-Hockberg adjustment to control for family-wide error
+dunnTest(PorosityComparison$Porosity ~ PorosityComparison$SubCategory, method = "holm")
