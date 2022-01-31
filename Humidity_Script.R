@@ -14,11 +14,18 @@
 install.packages("pacman") # Download package with function to load multiple packaged at once
 
 # Loading required packages for code below. p_load() will download packages that aren't in system library
-pacman::p_load(fsa,
+pacman::p_load(extrafonts,
+               FSA,
                ggpubr, 
                pwr,
                scales,
                tidyverse)
+
+# Importing fonts for plots
+font_import()
+
+# Yes, import all fonts (takes a few minutes)
+y
 
 #########################################################################################################################################
 # IMPORTING THE REQUIRED DATASETS TO RUN THE BELOW SCRIPTS
