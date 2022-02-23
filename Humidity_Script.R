@@ -2,21 +2,21 @@
 # Author: GREG CHISM
 # Date: Nov 2021
 # email: gchism@email.arizona.edu
-# Project: "Temnothorax rugatulus" ants do not change their nest walls in response to environmental humidity 
+# Project: "Temnothorax rugatulus" ants do not change their nest walls in response to environmental humidity
 # Title: Humidity, colony percentage death, porosity data grooming, visualization, and analyses
 #########################################################################################################################################
 
 # The below script was utilized to analyze and visualize data from the associated manuscript.
-# The associated databases are "HumidityExperimentDatabase.csv", "SupplementalHygrometerDatabase.csv", "and"HumidMortality.csv", and "PorosityComparison.csv" 
+# The associated databases are "HumidityExperimentDatabase.csv", "SupplementalHygrometerDatabase.csv", "and"HumidMortality.csv", and "PorosityComparison.csv"
 
-# MUST RUN THE NEXT TWO LINES (PARTICULARLY PACMAN) BEFORE ANY OTHER! 
+# MUST RUN THE NEXT TWO LINES (PARTICULARLY PACMAN) BEFORE ANY OTHER!
 # Installing and loading packages used for graphs and analyses
 install.packages("pacman") # Download package with function to load multiple packaged at once
 
 # Loading required packages for code below. p_load() will download packages that aren't in system library
 pacman::p_load(extrafonts,
                FSA,
-               ggpubr, 
+               ggpubr,
                pwr,
                scales,
                tidyverse)
@@ -30,7 +30,7 @@ y
 #########################################################################################################################################
 # IMPORTING THE REQUIRED DATASETS TO RUN THE BELOW SCRIPTS
 #########################################################################################################################################
-# Main database with nest wall properties 
+# Main database with nest wall properties
 HumidityExperimentalDatabase <- read.csv("HumidityExperimentalDatabase.csv")
 
 # Supplemental database with relative humidity (%) and temperature (celcius) values from experimental container
@@ -43,7 +43,7 @@ HumidMortalityRaw <- read.csv("HumidMortalityRaw.csv")
 PorosityComparison <- read.csv("PorosityComparison.csv")
 
 #########################################################################################################################################
-# MEAN HUMIDITY VALUES 
+# MEAN HUMIDITY VALUES
 # The script below is used to find mean humidity values from hygrometer data (SupplementalHygrometerDatabase)
 #########################################################################################################################################
 
@@ -59,41 +59,47 @@ SupplementalHygrometerDatabaseReduced <- SupplementalHygrometerDatabase %>%
   distinct()
 
 # Calculating salt's average and standard deviation in humidity produced in each trial
-SupplementalHygrometerDatabaseTrials <- SupplementalHygrometerDatabaseReduced %>% 
+SupplementalHygrometerDatabaseTrials <- SupplementalHygrometerDatabaseReduced %>%
   select(Trial, Salt, FullHumidity, FullStd.DevHum, FullTemperature, FullStd.DevTemp) %>%
   distinct()
 
 # Calculating the average and standard deviation of the temperature in the experimental assays
-SupplementalHygrometerDatabaseReduced %>% 
+SupplementalHygrometerDatabaseReduced %>%
   ungroup() %>%
   mutate(MeanTemp = mean(Temperature), SdTemp = sd(Temperature)) %>%
   select(MeanTemp, SdTemp) %>%
   distinct()
 
 #########################################################################################################################################
-# FINAL DATASET OFMEAN HUMIDITY AND BUILD NEST WALL PROPERTIES 
+# FINAL DATASET OFMEAN HUMIDITY AND BUILD NEST WALL PROPERTIES
 # The script below is used TO join the mean humidity values from above to the built wall properties dataset (HumidityExperimentalDatabase)
 #########################################################################################################################################
 
 # Separating the wall building experimental data into Trial 1 and Trial 2 and joining average humidity data
 Complete_Data_final_Trial1 <- HumidityExperimentalDatabase %>%
-  filter(Trial == 1) %>% 
-  #Calculate nest wall density: If wall volume isn't 0, then calculate by dividing wall weight and wall volume, else 0
-  mutate(Density = ifelse(Volume != 0, CollWallWt / Volume, 0),
+  filter(Trial == 1) %>%
+  # Calculate nest wall volume as Area * 1.5, which is the height of the nest
+  mutate(Volume = Area * 1.5,
+  # Calculate nest wall density: If wall volume isn't 0, then calculate by dividing wall weight and wall volume, else 0
+         Density = ifelse(Volume != 0, CollWallWt / Volume, 0),
+         PropIIWall = ((StartWtII - UsedWtII) / (StartWtII - UsedWtII + StartWtI - UsedWtI)),
          PropIWall = 1 - PropIIWall) %>%
   left_join(SupplementalHygrometerDatabaseReduced)
 
 # Same procedure as above but for trial 2
 Complete_Data_final_Trial2 <- HumidityExperimentalDatabase %>%
-  filter(Trial == 2) %>% 
-  #Calculate nest wall density: If wall volume isn't 0, then calculate by dividing wall weight and wall volume, else 0
-  mutate(Density = ifelse(Volume != 0, CollWallWt / Volume, 0),
-         PropIWall = 1 - PropIIWall) %>%
-  left_join(SupplementalHygrometerDatabaseReduced)
+  filter(Trial == 2) %>%
+# Calculate nest wall volume as Area * 1.5, which is the height of the nest
+mutate(Volume = Area * 1.5,
+# Calculate nest wall density: If wall volume isn't 0, then calculate by dividing wall weight and wall volume, else 0
+       Density = ifelse(Volume != 0, CollWallWt / Volume, 0),
+       PropIIWall = ((StartWtII - UsedWtII) / (StartWtII - UsedWtII + StartWtI - UsedWtI)),
+       PropIWall = 1 - PropIIWall) %>%
+left_join(SupplementalHygrometerDatabaseReduced)
 
 #########################################################################################################################################
-# PREFERED NEST WALL SUBSTRATE AND SIDE BIAS 
-# The script below used binomial tests to see if a building substrate or substrate placement (left / right) was favored 
+# PREFERED NEST WALL SUBSTRATE AND SIDE BIAS
+# The script below used binomial tests to see if a building substrate or substrate placement (left / right) was favored
 # The script also finds the median ratio of substrate II used in wall building for both trials
 #########################################################################################################################################
 
@@ -104,7 +110,7 @@ wilcox.test(Complete_Data_final_Trial1$PropIIWall, Complete_Data_final_Trial1$Pr
 # Trial 2
 wilcox.test(Complete_Data_final_Trial2$PropIIWall, Complete_Data_final_Trial2$PropIWall, paired = FALSE)
 
-# Median amount of substrate I and substrate II used to build walls, and the median ratio 
+# Median amount of substrate I and substrate II used to build walls, and the median ratio
 # Trial 1
 Complete_Data_final_Trial1 %>%
   mutate(MedSubI = median(StartWtI - UsedWtI), MedSubII = median(StartWtII - UsedWtII), MedRatio = median(PropIIWall)) %>%
@@ -119,11 +125,11 @@ Complete_Data_final_Trial2 %>%
 
 #########################################################################################################################################
 # RELATIVE HUMIDITY AND BOTH NEST WALL FEATURES AND INTERNAL NEST AREA: POWER ANALYSES OF LINEAR REGRESSIONS USED BELOW
-# The script below is to determine the statistical power of our linear regressions testing the effect of humidity on nest wall properties 
+# The script below is to determine the statistical power of our linear regressions testing the effect of humidity on nest wall properties
 #########################################################################################################################################
 
-# Power analysis for a linear regression 
-# We used the true sample size of our trials and determined the power of our linear regressions, where 0.1, 0.3, and 0.5 represent a "small", "medium", and "large" effect size 
+# Power analysis for a linear regression
+# We used the true sample size of our trials and determined the power of our linear regressions, where 0.1, 0.3, and 0.5 represent a "small", "medium", and "large" effect size
 # pwr.f2.test considers u (numerator degrees of freedom), v (denominator degrees of freedom), f2 (effect size), sig.level (significance level - type I error probability)
 # Trial 1
 pwr.f2.test(u = 2, v = 16, f2 = 0.02, sig.level = 0.05)
@@ -142,20 +148,20 @@ pwr.f2.test(u = 2, v = 14, sig.level = 0.05, power = 0.8)
 
 #########################################################################################################################################
 # RELATIVE HUMIDITY AND BOTH NEST WALL FEATURES AND INTERNAL NEST AREA: PLOTS AND ANALYSES
-# The script below is to plot and analyze linear relationships between humidity on nest wall properties 
+# The script below is to plot and analyze linear relationships between humidity on nest wall properties
 #########################################################################################################################################
 # Trial 1 uses the Complete_Data_final_Trial1 dataset created above
 # Trial 2 uses the Complete_Data_final_Trial2 dataset created above
 
 #Color palette used for trial 1 to give each colony a unique color
-ColonyPalette1 <- c("1" = "coral3", "2" = "chartreuse2", "3" = "cadetblue", "4" = "burlywood4", "5" = "grey40", 
+ColonyPalette1 <- c("1" = "coral3", "2" = "chartreuse2", "3" = "cadetblue", "4" = "burlywood4", "5" = "grey40",
                     "7" = "blue4", "8" = "lightslateblue", "9" = "purple2", "10" = "blue", "11" = "darkseagreen4",
                     "12" = "turquoise2", "13" = "darkgreen", "14" = "firebrick4", "15" = "magenta3", "17" = "paleturquoise3",
                     "18" = "seagreen3", "20" = "grey12", "21" = "rosybrown3", "22" = "yellow3")
 
 #Color palette used for trial 2 to give each colony a unique color
-ColonyPalette2 <- c("1" = "coral3", "2" = "chartreuse2", "3" = "cadetblue", "4" = "burlywood4", "5" = "brown4", 
-                    "7" = "blue4", "11" = "darkseagreen4", "12" = "turquoise2", "13" = "darkgreen", 
+ColonyPalette2 <- c("1" = "coral3", "2" = "chartreuse2", "3" = "cadetblue", "4" = "burlywood4", "5" = "brown4",
+                    "7" = "blue4", "11" = "darkseagreen4", "12" = "turquoise2", "13" = "darkgreen",
                     "14" = "firebrick4", "15" = "magenta3", "17" = "paleturquoise3",
                     "18" = "seagreen3", "20" = "grey12", "21" = "rosybrown3", "22" = "yellow3")
 
@@ -180,9 +186,9 @@ WeightPlot1 <- ggplot(Complete_Data_final_Trial1, aes(x = Humidity, y = CollWall
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette1)) 
+        legend.key = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette1))
 
 # Trial 2
 # Color scale was manually produced above - see "ColonyPallette2"
@@ -200,9 +206,9 @@ WeightPlot2 <- ggplot(Complete_Data_final_Trial2, aes(x = Humidity, y = CollWall
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette2)) 
+        legend.key = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette2))
 
 # Linear and quadratic regressions that assess the influence of relative humidity on nest wall weight
 # Linear fits are used to compare adjusted R-squared between the linear and quadratic regressions
@@ -243,9 +249,9 @@ LengthPlot1 <- ggplot(Complete_Data_final_Trial1, aes(x = Humidity, y = Length))
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
         legend.justification = c(1, 1),
-        legend.key = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette1)) + 
+        legend.key = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette1)) +
   ylim(0, 400)
 
 # Trial 2
@@ -265,9 +271,9 @@ LengthPlot2 <- ggplot(Complete_Data_final_Trial2, aes(x = Humidity, y = Length))
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
         legend.justification = c(1, 1),
-        legend.key = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette2)) + 
+        legend.key = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette2)) +
   ylim(0, 400)
 
 # Linear and quadratic regressions that assess the influence of relative humidity on nest wall length
@@ -307,9 +313,9 @@ AreaPlot1 <- ggplot(Complete_Data_final_Trial1, aes(x = Humidity, y = Area)) +
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette1)) + 
+        legend.key = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette1)) +
   ylim(0, 8000)
 
 # Trial 2
@@ -328,14 +334,14 @@ AreaPlot2 <- ggplot(Complete_Data_final_Trial2, aes(x = Humidity, y = Area)) +
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette2)) + 
+        legend.key = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette2)) +
   ylim(0, 8000)
 
 # Linear and quadratic regressions that assess the influence of relative humidity on nest wall area
 # Linear fits are used to compare adjusted R-squared between the linear and quadratic regressions
-# Linear regression 
+# Linear regression
 # Trial 1
 # Linear fit
 summary(lm(Area ~ Humidity, data = Complete_Data_final_Trial1))
@@ -374,9 +380,9 @@ DensityPlot1 <- ggplot(Complete_Data_final_Trial1, aes(x = Humidity, y = Density
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette1)) + 
+        legend.key = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette1)) +
   scale_y_continuous(labels = scaleFUN)
 
 # Trial 2
@@ -395,9 +401,9 @@ DensityPlot2 <- ggplot(Complete_Data_final_Trial2, aes(x = Humidity, y = Density
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette2)) + 
+        legend.key = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette2)) +
   scale_y_continuous(labels=scaleFUN)
 
 # Linear and quadratic regressions that assess the influence of relative humidity on nest wall density
@@ -437,8 +443,8 @@ CompnPlot1 <- ggplot(Complete_Data_final_Trial1, aes(x = Humidity, y = PropIIWal
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
+        legend.key = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
   scale_color_manual(values = as.vector(ColonyPalette1)) +
   ylim(0.2, 1)
 
@@ -458,8 +464,8 @@ CompnPlot2 <- ggplot(Complete_Data_final_Trial2, aes(x = Humidity, y = PropIIWal
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
+        legend.key = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
   scale_color_manual(values = as.vector(ColonyPalette2)) +
   ylim(0.2, 1)
 
@@ -501,9 +507,9 @@ IntAreaPlot1 <- ggplot(Complete_Data_final_Trial1, aes(x = Humidity, y = Nest.Ar
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "top",
         legend.direction = "horizontal",
-        legend.key = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette1)) + 
+        legend.key = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette1)) +
   ylim(0, 8000)
 
 # Trial 2
@@ -523,9 +529,9 @@ IntAreaPlot2 <- ggplot(Complete_Data_final_Trial2, aes(x = Humidity, y = Nest.Ar
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "top",
         legend.direction = "horizontal",
-        legend.key = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette2)) + 
+        legend.key = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette2)) +
   ylim(0, 8000)
 
 # Linear and quadratic regressions that assess the influence of relative humidity on nest wall weight
@@ -545,18 +551,18 @@ summary(lm(Nest.Area ~ Humidity, data = Complete_Data_final_Trial2))
 summary(lm(Nest.Area ~ poly(Humidity, 2, raw = TRUE), data = Complete_Data_final_Trial2))
 
 # Trial 1 arranged & annotated combine plot
-# Arrange all plots relating to the effect of humidity on nest wall traits 
-HumidPlots1<-ggarrange(WeightPlot1, LengthPlot1, 
-                       AreaPlot1, DensityPlot1, 
+# Arrange all plots relating to the effect of humidity on nest wall traits
+HumidPlots1<-ggarrange(WeightPlot1, LengthPlot1,
+                       AreaPlot1, DensityPlot1,
                        CompnPlot1, IntAreaPlot1,
                        labels = c("(a)", "(b)",
                                   "(c)", "(d)",
                                   "(e)", "(f)"),
                        font.label = list(size = 26, family = "Arial", face = "plain"),
                        label.x = 0.9,
-                       ncol = 2, nrow = 3, 
+                       ncol = 2, nrow = 3,
                        common.legend = TRUE,
-                       legend = "top") 
+                       legend = "top")
 
 # Annotate the arranged plot
 annotate_figure(HumidPlots1,
@@ -568,18 +574,18 @@ annotate_figure(HumidPlots1,
 )
 
 # Trial 2 arranged & annotated combine plot
-# Arrange all plots relating to the effect of humidity on nest wall traits 
-HumidPlots2<-ggarrange(WeightPlot2, LengthPlot2, 
-                       AreaPlot2, DensityPlot2, 
+# Arrange all plots relating to the effect of humidity on nest wall traits
+HumidPlots2<-ggarrange(WeightPlot2, LengthPlot2,
+                       AreaPlot2, DensityPlot2,
                        CompnPlot2, IntAreaPlot2,
                        labels = c("(a)", "(b)",
                                   "(c)", "(d)",
                                   "(e)", "(f)"),
                        font.label = list(size = 26, family = "Arial", face = "plain"),
                        label.x = 0.9,
-                       ncol = 2, nrow = 3, 
+                       ncol = 2, nrow = 3,
                        common.legend = TRUE,
-                       legend = "top") 
+                       legend = "top")
 
 # Annotate the arranged plot
 annotate_figure(HumidPlots2,
@@ -592,10 +598,10 @@ annotate_figure(HumidPlots2,
 
 #########################################################################################################################################
 # COLONY SIZE BOTH NEST WALL FEATURES AND INTERNAL NEST AREA: COMPARATIVE STATISTICS & DATA PROCESSING
-# The script below is to find the median & range of worker and brood number and to creating working datasets for plots and analyses 
+# The script below is to find the median & range of worker and brood number and to creating working datasets for plots and analyses
 #########################################################################################################################################
 
-# Median & range of worker and brood number 
+# Median & range of worker and brood number
 # Trial 1
 # Workers
 median(Complete_Data_final_Trial1$Number.Ant)
@@ -657,8 +663,8 @@ Complete_Data_final_Trial2ColonyCount <- full_join(Complete_Data_final_Trial2Wor
 #########################################################################################################################################
 
 # Power analysis for a correlation test
-# We used the true sample size of our trials and determined the power of our correlation tests, where 0.1, 0.3, and 0.5 
-# represent a "small", "medium", and "large" effect size 
+# We used the true sample size of our trials and determined the power of our correlation tests, where 0.1, 0.3, and 0.5
+# represent a "small", "medium", and "large" effect size
 
 # Trial 1
 pwr.r.test(n = 19, r = 0.1, sig.level = 0.05, alternative = "two.sided")
@@ -702,8 +708,8 @@ WeightPlotColony1 <- ggplot(Complete_Data_final_Trial1ColonyCount, aes(x = Numbe
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
         legend.key=element_blank()) +
-  guides(color = guide_legend(title = "Colony ID", family = "Arial"), 
-         shape = guide_legend(title = "Colony member", family = "Arial")) + 
+  guides(color = guide_legend(title = "Colony ID", family = "Arial"),
+         shape = guide_legend(title = "Colony member", family = "Arial")) +
   scale_color_manual(values = as.vector(ColonyPalette1)) +
   scale_x_continuous(breaks = seq(75, 225, by = 75))
 
@@ -727,12 +733,12 @@ WeightPlotColony2 <- ggplot(Complete_Data_final_Trial2ColonyCount, aes(x = Numbe
         legend.key=element_blank(),
         strip.background = element_blank(),
         strip.text = element_blank(),
-        legend.key.width = unit(2.5, "line")) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial"), 
+        legend.key.width = unit(2.5, "line")) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial"),
          shape = guide_legend(title = "Colony member", family = "Arial"),
-         linetype = guide_legend(title = "Colony member", family = "Arial")) + 
-  facet_wrap( ~ ColonyMember) + 
-  scale_color_manual(values = as.vector(ColonyPalette2)) 
+         linetype = guide_legend(title = "Colony member", family = "Arial")) +
+  facet_wrap( ~ ColonyMember) +
+  scale_color_manual(values = as.vector(ColonyPalette2))
 
 # Spearman's rho correlations tests that examine the relationship between the number of ants and brood in a colony and wall weight
 # Trial 1
@@ -758,8 +764,8 @@ cor.test(Complete_Data_final_Trial2$Number.Brood, Complete_Data_final_Trial2$Col
 # Color scale was manually produced above - see "ColonyPallette1"
 LengthPlotColony1 <- ggplot(Complete_Data_final_Trial1ColonyCount, aes(x = Number.Colony, y = Length, group = ColonyMember)) +
   geom_point(size = 6, aes(color = as.factor(Colony), shape = ColonyMember)) +
-  geom_smooth(data = Complete_Data_final_Trial1ColonyCount %>% filter(ColonyMember == "Brood"), 
-              aes(x = Number.Colony, y = Length), 
+  geom_smooth(data = Complete_Data_final_Trial1ColonyCount %>% filter(ColonyMember == "Brood"),
+              aes(x = Number.Colony, y = Length),
               color = "black", se = FALSE, method = "lm", size = 2.5) +
   ggtitle("Wall length") +
   xlab(NULL) +
@@ -775,10 +781,10 @@ LengthPlotColony1 <- ggplot(Complete_Data_final_Trial1ColonyCount, aes(x = Numbe
         legend.position = "right",
         legend.key=element_blank(),
         strip.background = element_blank(),
-        strip.text = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial"), 
-         shape = guide_legend(title = "Colony member", family = "Arial")) + 
-  facet_wrap(~ColonyMember) + 
+        strip.text = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial"),
+         shape = guide_legend(title = "Colony member", family = "Arial")) +
+  facet_wrap(~ColonyMember) +
   scale_color_manual(values = as.vector(ColonyPalette1)) +
   scale_x_continuous(breaks = seq(75, 225, by = 75))
 
@@ -798,10 +804,10 @@ LengthPlotColony2 <- ggplot(Complete_Data_final_Trial2ColonyCount, aes(x = Numbe
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key=element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial"), 
-         shape = guide_legend(title = "Colony member", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette2)) 
+        legend.key=element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial"),
+         shape = guide_legend(title = "Colony member", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette2))
 
 # Spearman's rho correlations tests that examine the relationship between the number of ants and brood in a colony and wall length (mm)
 # Trial 1
@@ -827,8 +833,8 @@ cor.test(Complete_Data_final_Trial2$Number.Brood, Complete_Data_final_Trial2$Len
 # Color scale was manually produced above - see "ColonyPallette1"
 AreaPlotColony1 <- ggplot(Complete_Data_final_Trial1ColonyCount, aes(x = Number.Colony, y = Area, group = ColonyMember)) +
   geom_point(size = 6, aes(color = as.factor(Colony), shape = ColonyMember)) +
-  geom_smooth(data = Complete_Data_final_Trial1ColonyCount %>% filter(ColonyMember == "Brood"), 
-              aes(x = Number.Colony, y=Area), 
+  geom_smooth(data = Complete_Data_final_Trial1ColonyCount %>% filter(ColonyMember == "Brood"),
+              aes(x = Number.Colony, y=Area),
               color = "black", se = FALSE, method = "lm", size = 2.5) +
   ggtitle("Wall area") +
   xlab(NULL) +
@@ -844,10 +850,10 @@ AreaPlotColony1 <- ggplot(Complete_Data_final_Trial1ColonyCount, aes(x = Number.
         legend.position = "right",
         legend.key=element_blank(),
         strip.background = element_blank(),
-        strip.text = element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial"), 
-         shape = guide_legend(title = "Colony member", family = "Arial")) + 
-  facet_wrap(~ColonyMember) + 
+        strip.text = element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial"),
+         shape = guide_legend(title = "Colony member", family = "Arial")) +
+  facet_wrap(~ColonyMember) +
   scale_color_manual(values = as.vector(ColonyPalette1)) +
   scale_x_continuous(breaks = seq(75, 225, by = 75))
 
@@ -867,10 +873,10 @@ AreaPlotColony2 <- ggplot(Complete_Data_final_Trial2ColonyCount, aes(x = Number.
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key=element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial"), 
-         shape = guide_legend(title = "Colony member", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette2)) 
+        legend.key=element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial"),
+         shape = guide_legend(title = "Colony member", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette2))
 
 # Spearman's rho correlations tests that examine the relationship between the number of ants and brood in a colony and wall area (mm^2)
 # Trial 1
@@ -909,9 +915,9 @@ DensityPlotColony1 <- ggplot(Complete_Data_final_Trial1ColonyCount, aes(x = Numb
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key=element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial"), 
-         shape = guide_legend(title = "Colony member", family = "Arial")) + 
+        legend.key=element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial"),
+         shape = guide_legend(title = "Colony member", family = "Arial")) +
   scale_color_manual(values = as.vector(ColonyPalette1)) +
   scale_x_continuous(breaks = seq(75, 225, by = 75))
 
@@ -931,10 +937,10 @@ DensityPlotColony2 <- ggplot(Complete_Data_final_Trial2ColonyCount, aes(x = Numb
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key=element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial"), 
-         shape = guide_legend(title = "Colony member", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette2)) 
+        legend.key=element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial"),
+         shape = guide_legend(title = "Colony member", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette2))
 
 # Spearman's rho correlations tests that examine the relationship between the number of ants and brood in a colony and wall density (g / mm^3)
 # Trial 1
@@ -972,9 +978,9 @@ CompnPlotColony1 <- ggplot(Complete_Data_final_Trial1ColonyCount, aes(x = Number
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key=element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial"), 
-         shape = guide_legend(title = "Colony member", family = "Arial")) + 
+        legend.key=element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial"),
+         shape = guide_legend(title = "Colony member", family = "Arial")) +
   scale_color_manual(values = as.vector(ColonyPalette1)) +
   scale_x_continuous(breaks = seq(75, 225, by = 75))
 
@@ -994,10 +1000,10 @@ CompnPlotColony2 <- ggplot(Complete_Data_final_Trial2ColonyCount, aes(x = Number
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key=element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial"), 
-         shape = guide_legend(title = "Colony member", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette2)) 
+        legend.key=element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial"),
+         shape = guide_legend(title = "Colony member", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette2))
 
 # Spearman's rho correlations tests that examine the relationship between the number of ants and brood in a colony and wall composition (proportion of small building substrate)
 # Trial 1
@@ -1035,10 +1041,10 @@ IntAreaColony1 <- ggplot(Complete_Data_final_Trial1ColonyCount, aes(x = Number.C
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key=element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial"), 
-         shape = guide_legend(title = "Colony member", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette1)) + 
+        legend.key=element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial"),
+         shape = guide_legend(title = "Colony member", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette1)) +
   ylim(0, 8000) +
   scale_x_continuous(breaks = seq(50, 225, by = 75))
 
@@ -1058,10 +1064,10 @@ IntAreaColony2 <- ggplot(Complete_Data_final_Trial2ColonyCount, aes(x = Number.C
         legend.text = element_text(size = 26, family = "Arial", color = "black"),
         legend.title = element_text(size = 26, family = "Arial", color = "black"),
         legend.position = "right",
-        legend.key=element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial"), 
-         shape = guide_legend(title = "Colony member", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette2)) + 
+        legend.key=element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial"),
+         shape = guide_legend(title = "Colony member", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette2)) +
   ylim(0, 8000)
 
 # Spearman's rho correlations tests that examine the relationship between the number of ants and brood in a colony and internal nest area (mm^2)
@@ -1080,18 +1086,18 @@ cor.test(Complete_Data_final_Trial2$Number.Ant, Complete_Data_final_Trial2$Nest.
 cor.test(Complete_Data_final_Trial2$Number.Brood, Complete_Data_final_Trial2$Nest.Area, method = 'spearman', alternative = "two.sided")
 
 # Trial 1 arranged & annotated combine plot
-# Arrange all plots relating to the effect of colony size on nest wall traits 
-HumidPlotsColony1<-ggarrange(WeightPlotColony1, LengthPlotColony1, 
-                       AreaPlotColony1, DensityPlotColony1, 
+# Arrange all plots relating to the effect of colony size on nest wall traits
+HumidPlotsColony1<-ggarrange(WeightPlotColony1, LengthPlotColony1,
+                       AreaPlotColony1, DensityPlotColony1,
                        CompnPlotColony1, IntAreaColony1,
                        labels = c("(a)", "(b)",
                                   "(c)", "(d)",
                                   "(e)", "(f)"),
                        font.label = list(size = 26, family = "Arial", face = "plain"),
                        label.x = 0.9,
-                       ncol = 2, nrow = 3, 
+                       ncol = 2, nrow = 3,
                        common.legend = TRUE,
-                       legend = "top") 
+                       legend = "top")
 
 # Annotate the combined plot
 annotate_figure(HumidPlotsColony1,
@@ -1104,17 +1110,17 @@ annotate_figure(HumidPlotsColony1,
 
 # Trial 2 arranged & annotated combine plot
 # Arrange all plots relating to the effect of colony size on nest wall traits
-HumidPlotsColony2<-ggarrange(WeightPlotColony2, LengthPlotColony2, 
-                             AreaPlotColony2, DensityPlotColony2, 
+HumidPlotsColony2<-ggarrange(WeightPlotColony2, LengthPlotColony2,
+                             AreaPlotColony2, DensityPlotColony2,
                              CompnPlotColony2, IntAreaColony2,
                              labels = c("(a)", "(b)",
                                         "(c)", "(d)",
                                         "(e)", "(f)"),
                              font.label = list(size = 26, family = "Arial", face = "plain"),
                              label.x = 0.9,
-                             ncol = 2, nrow = 3, 
+                             ncol = 2, nrow = 3,
                              common.legend = TRUE,
-                             legend = "top") 
+                             legend = "top")
 
 # Annotate the combined plot
 annotate_figure(HumidPlotsColony2,
@@ -1127,7 +1133,7 @@ annotate_figure(HumidPlotsColony2,
 
 #########################################################################################################################################
 # WORKER AND BROOD DEATH AND RELATIVE HUMIDITY: FINAL DATASET
-# The script below is create the final dataset for testing the relationship between humidity exposure and colony worker and brood death  
+# The script below is create the final dataset for testing the relationship between humidity exposure and colony worker and brood death
 #########################################################################################################################################
 
 
@@ -1139,7 +1145,7 @@ HumidMortality <- HumidMortalityRaw %>%
 #########################################################################################################################################
 # WORKER AND BROOD DEATH AND RELATIVE HUMIDITY: PLOTS AND ANALYSES
 # The script below is to plot and analyze relationships between worker and brood death the relative humidity colonies were first exposed to
-########################################################################################################################################## 
+##########################################################################################################################################
 
 # Scatterplots with humidity (%) on the x-axis and either worker and brood death on the y-axis (% less after trial 1)
 # Plot, axes, and legend titles are specified
@@ -1162,9 +1168,9 @@ WorkerDeathPlot <- ggplot(HumidMortality, aes(x = Humidity, y = WorkerDeath)) +
         legend.title = element_text(size = 22, family = "Arial", color = "black"),
         legend.position = "top",
         legend.direction = "horizontal",
-        legend.key=element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette1)) 
+        legend.key=element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette1))
 
 # Brood
 # Color scale was manually produced above - see "ColonyPallette1"
@@ -1183,9 +1189,9 @@ BroodDeathPlot <- ggplot(HumidMortality, aes(x = Humidity, y = BroodDeath)) +
         legend.title = element_text(size = 22, family = "Arial", color = "black"),
         legend.position = "top",
         legend.direction = "horizontal",
-        legend.key=element_blank()) + 
-  guides(color = guide_legend(title = "Colony ID", family = "Arial")) + 
-  scale_color_manual(values = as.vector(ColonyPalette1)) 
+        legend.key=element_blank()) +
+  guides(color = guide_legend(title = "Colony ID", family = "Arial")) +
+  scale_color_manual(values = as.vector(ColonyPalette1))
 
 # Arranging the worker and brood death plots
 ColonyDeathHumid <- ggarrange(WorkerDeathPlot, BroodDeathPlot,
@@ -1193,9 +1199,9 @@ ColonyDeathHumid <- ggarrange(WorkerDeathPlot, BroodDeathPlot,
                        font.label = list(size = 22, family = "Arial", face = "plain"),
                        label.x = 0.9,
                        label.y = 1.005,
-                       ncol = 2, nrow = 1, 
+                       ncol = 2, nrow = 1,
                        common.legend = TRUE,
-                       legend = "top") 
+                       legend = "top")
 
 # Annotating the combined plot
 annotate_figure(ColonyDeathHumid,
@@ -1211,12 +1217,12 @@ annotate_figure(ColonyDeathHumid,
 summary(glm(WorkerDeath ~ Humidity, family = "binomial", data = HumidMortality))
 
 # Brood
-summary(glm(BroodDeath ~ Humidity, family = "binomial", data = HumidMortality)) 
+summary(glm(BroodDeath ~ Humidity, family = "binomial", data = HumidMortality))
 
 #########################################################################################################################################
 # POROSITY COMPARISONS: PLOTS AND ANALYSES
-# The script below is to plot and analyze the porosities of experimental substrates, built walls, and natural walls 
-########################################################################################################################################## 
+# The script below is to plot and analyze the porosities of experimental substrates, built walls, and natural walls
+##########################################################################################################################################
 # Uses the PorosityComparison dataset
 
 # Creating data subsets for plotting and Mann-Whitney U tests comparing all porosity combinations
@@ -1232,7 +1238,7 @@ PorosityComparisonII <- PorosityComparison %>%
 PorosityComparisonNat <- PorosityComparison %>%
   filter(SubCategory == "Natural")
 
-# Built wall 
+# Built wall
 PorosityComparisonBuilt <- PorosityComparison %>%
   filter(SubCategory == "Built")
 
@@ -1255,7 +1261,7 @@ ggplot(PorosityComparison, aes(x = reorder(SubCategory, Porosity, FUN = median),
         plot.title = element_text(size = 22, family = "Arial", color = "black", hjust = -0.1, vjust = 0),
         axis.text = element_text(size = 22, family = "Arial", color = "black"),
         axis.title.y = element_text(size = 22, family = "Arial", color = "black"),
-        axis.title.x = element_text(size = 22, family = "Arial", color = "black")) 
+        axis.title.x = element_text(size = 22, family = "Arial", color = "black"))
 
 # Kruskal-Wallis test to compare artificial and natural nest substrate porosities
 kruskal.test(PorosityComparison$SubCategory, PorosityComparison$Porosity)
