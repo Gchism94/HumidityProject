@@ -1,4 +1,4 @@
-# README for Humidity affects on _Temnothorax rugatulus_ nest wall modifications
+# README for _Temnothorax rugatulus_ ants do not change their nest walls in response to environmental humidity
 
 ## Overview 
 Data and R script used for manuscript: _Temnothorax rugatulus_ ants do not change their nest walls in response to environmental humidity 
