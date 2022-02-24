@@ -3,13 +3,16 @@
 ## Overview 
 Data and R script used for manuscript: _Temnothorax rugatulus_ ants do not change their nest walls in response to environmental humidity 
 
+## Purpose of the study 
+### The regulation of humidity is one purpose of ant nests. _Temnothorax rugatulus_ colonies modify their nests in rock crevices through walls build from environmental substrates. This study examines whether _T. rugatulus_ colonies change their built nest walls in response to environmental humidity. 
+
 ## Dependencies
 ##### The script "Humidity_Script.R" is executable so long as all data are loaded into the environment
 ##### Several packages are required, however all are loaded through the package "pacman", so be certain to install this package before running any other code.
-##### See the following documentation for further information on the "packman" package: https://www.rdocumentation.org/packages/pacman/versions/0.5.1 
+##### See the following documentation for further information on the "pacman" package: https://www.rdocumentation.org/packages/pacman/versions/0.5.1 
 
 ## Structure of the data
-##### SupplementalHygrometerDatabase.csv
+#### SupplementalHygrometerDatabase.csv
 ###### Raw hygrometer data that is used to calculate the average environmental humidity and temperature for each Trial:Salt combination
 * Colony: Unique experimental colony identifiers 
 * TrialNumber: Sequential trial number (1-4) that is NOT unique for each colony - see "Trial"
@@ -19,7 +22,7 @@ Data and R script used for manuscript: _Temnothorax rugatulus_ ants do not chang
 * RH: Relative humidity (%) 
 * Trial: The trial number for each individual colony, each colony underwent two trials
 
-##### HumidityExperimentalDatabase.csv
+#### HumidityExperimentalDatabase.csv
 ###### Raw experimental data with nest features and colony size
 * Colony: Unique experimental colony identifiers
 * Trial: The trial number for each individual colony, each colony underwent two trials
@@ -39,4 +42,20 @@ Data and R script used for manuscript: _Temnothorax rugatulus_ ants do not chang
 * StartWtII: The initial weight (g) of the available substrate II building nest wall material
 * UsedWtII: The weight (g) of the available substrate II building nest wall material following the experimental building phase
 * CollWallWt: The weight (g) of the experimental nest wall that each colony built
-Colony,Trial,TrialNumber,Day,Area,Length,Nest.Area,HumLevel,Number.Ant,Number.Brood,Number.Queens,Salt,SubstrateISide,StartWtI,UsedWtI,StartWtII,UsedWtII,CollWallWt,WallWeight,Density,PropIIWall
+
+#### HumidMortalityRaw.csv
+###### Raw experimental data with proportion of workers and brood dead after each colony underwent Trial 1
+* Colony: Unique experimental colony identifiers
+* WorkerDeath: Proportion of workers that died 
+* BroodDeath: Proportion of brood that died 
+* TrialNumber: Sequential trial number (1-4) that is NOT unique for each colony
+
+#### PorosityComparison.csv
+###### Data comparing the porosities of each experimental substrate, experimentally built walls, and collected _Temnothorax rugatulus_ walls
+* SubstrateID: A unique identifier for each substrate replicate
+* Trial: The trial number for each individual colony, each colony underwent two trials (only applicable for experimentally built walls) 
+* SubCategory: The type of substrate (Sub I, Sub II, Built, Natural)
+* TotalVolume: The combined pore (void space in compact substrate grains) and soil volume (ml) of a substrate
+* SoilVolume: The volume that the soil filled (ml), without pore volume (ml)
+* PoreVolume: The void space in between compact substrate grains (ml)
+* Porosity: The percentage of void space in compact substrate - PoreVolume/TotalVolume
