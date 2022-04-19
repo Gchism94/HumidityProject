@@ -20,7 +20,6 @@ pacman::p_load(FSA,
                lmerTest,
                MuMIn,
                papeR,
-               pwr,
                scales,
                simr,
                tidyverse)
@@ -84,32 +83,51 @@ Complete_Data_final_Trial1 <- HumidityExperimentalDatabase %>%
          PropIWall = 1 - PropIIWall) %>%
   left_join(SupplementalHygrometerDatabaseReduced)
 
-# Same procedure as above but for trial 2
+# Trial 2
 Complete_Data_final_Trial2 <- HumidityExperimentalDatabase %>%
   filter(Trial == 2) %>%
-# Calculate nest wall volume as Area * 1.5, which is the height of the nest
-mutate(Volume = Area * 1.5,
-# Calculate nest wall density: If wall volume isn't 0, then calculate by dividing wall weight and wall volume, else 0
+  # Calculate nest wall volume as Area * 1.5, which is the height of the nest
+  mutate(Volume = Area * 1.5,
+         # Calculate nest wall density: If wall volume isn't 0, then calculate by dividing wall weight and wall volume, else 0
+         Density = ifelse(Volume != 0, CollWallWt / Volume, 0),
+         PropIIWall = ((StartWtII - UsedWtII) / (StartWtII - UsedWtII + StartWtI - UsedWtI)),
+         PropIWall = 1 - PropIIWall) %>%
+  left_join(SupplementalHygrometerDatabaseReduced)
+
+# First we remove colonies with high mortality (>50% brood or worker death - from the HumidMortalityRaw data set)
+Complete_Data_final_Trial2 <- HumidMortalityRaw %>% 
+  # Don't need trial number
+  select(-c(TrialNumber)) %>%
+  # Right join to humidity & wall properties data set
+  right_join(HumidityExperimentalDatabase %>%
+               # Keep trial 2 data
+               filter(Trial == 2)) %>%
+  # Keep colonies with <50% mortality
+  filter(WorkerDeath <= 0.5 & BroodDeath <= 0.5) %>%
+  # Calculate nest wall volume as Area * 1.5, which is the height of the nest
+  mutate(Volume = Area * 1.5,
+  # Calculate nest wall density: If wall volume isn't 0, then calculate by dividing wall weight and wall volume, else 0
        Density = ifelse(Volume != 0, CollWallWt / Volume, 0),
        PropIIWall = ((StartWtII - UsedWtII) / (StartWtII - UsedWtII + StartWtI - UsedWtI)),
        PropIWall = 1 - PropIIWall) %>%
-left_join(SupplementalHygrometerDatabaseReduced)
+  left_join(SupplementalHygrometerDatabaseReduced) %>%
+  select(-c(WorkerDeath, BroodDeath))
 
 # Full join data for plots & analyses 
 Complete_Data_Final <- full_join(Complete_Data_final_Trial1, Complete_Data_final_Trial2)
 
 #########################################################################################################################################
-# PREFERED NEST WALL SUBSTRATE AND SIDE BIAS
+# RATIO OF SUBSTRATE II USED
 # The script below used binomial tests to see if a building substrate or substrate placement (left / right) was favored
 # The script also finds the median ratio of substrate II used in wall building for both trials
 #########################################################################################################################################
 
-# Mann-Whitney U tests to determine building substrate preference
+# One-sample wilcoxon tests to determine whether the ratio of substrate II used was greater thatn 50%
 # Trial 1
-wilcox.test(Complete_Data_final_Trial1$PropIIWall, Complete_Data_final_Trial1$PropIWall, paired = FALSE)
+wilcox.test(Complete_Data_final_Trial1$PropIIWall, mu = 0.5, alternative = "two.sided")
 
 # Trial 2
-wilcox.test(Complete_Data_final_Trial2$PropIIWall, Complete_Data_final_Trial2$PropIWall, paired = FALSE)
+wilcox.test(Complete_Data_final_Trial2$PropIIWall, mu = 0.5, alternative = "two.sided")
 
 # Median amount of substrate I and substrate II used to build walls, and the median ratio
 # Trial 1
@@ -323,71 +341,6 @@ annotate_figure(HumidPlots,
                 left = NULL,
                 right = NULL
 )
-
-#########################################################################################################################################
-# RELATIVE HUMIDITY AND BOTH NEST WALL FEATURES AND INTERNAL NEST AREA: POWER ANALYSES OF LINEAR REGRESSIONS USED BELOW
-# The script below is to determine the statistical power of our linear regressions testing the effect of humidity on nest wall properties
-#########################################################################################################################################
-
-# Power analysis for humidity & nest properties linear mixed effects models
-# We used the simr package to test the power of each of our linear mixed effects models 
-# 1. Assign each model to an object
-# 2. Simulate the power of our models through 200 Monte Carlo simulations and use a likelihood ratio test for effect size
-
-# Wall weight
-# Linear mixed effects model 
-fit <- lmer(CollWallWt ~ Humidity + (1|Trial), data = Complete_Data_Final)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-WallWt <- powerSim(fit, nsim = 200, fixed("Humidity", "lr"), progress = FALSE)
-
-# Saved object to show output
-WallWt
-
-# Wall length
-# Linear mixed effects model 
-fit1 <- lmer(Length ~ Humidity + (1|Trial), data = Complete_Data_Final)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-WallLength <- powerSim(fit1, nsim = 200, fixed("Humidity", "lr"), progress = FALSE)
-
-WallLength
-
-# Wall area
-# Linear mixed effects model 
-fit2 <- lmer(Area ~ Humidity + (1|Trial), data = Complete_Data_Final)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-WallArea <- powerSim(fit2, nsim = 200, fixed("Humidity", "lr"), progress = FALSE)
-
-WallArea
-
-# Wall density
-# Linear mixed effects model 
-fit3 <- lmer(Density ~ Humidity + (1|Trial), data = Complete_Data_Final)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-WallDens <- powerSim(fit3, nsim = 200, fixed("Humidity", "lr"), progress = FALSE)
-
-WallDens
-
-# Wall composition
-# Linear mixed effects model 
-fit4 <- lmer(PropIIWall ~ Humidity + (1|Trial), data = Complete_Data_Final)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-WallCompn <- powerSim(fit4, nsim = 200, fixed("Humidity", "lr"), progress = FALSE)
-
-WallCompn
-
-# Internal nest area
-# Linear mixed effects model 
-fit5 <- lmer(Nest.Area ~ Humidity + (1|Trial), data = Complete_Data_Final)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-Int.Area <- powerSim(fit5, nsim = 200, fixed("Humidity", "lr"), progress = FALSE)
-
-Int.Area
 
 #########################################################################################################################################
 # COLONY SIZE BOTH NEST WALL FEATURES AND INTERNAL NEST AREA: COMPARATIVE STATISTICS & DATA PROCESSING
@@ -693,138 +646,13 @@ annotate_figure(HumidPlotsColony,
 )
 
 #########################################################################################################################################
-# COLONY SIZE BOTH NEST WALL FEATURES AND INTERNAL NEST AREA: POWER ANALYSES OF LINEAR MIXED EFFECTS MODELS
-# The script below is to determine the statistical power of our spearman's rho correlations testing the effect of colony size on nest wall properties
-#########################################################################################################################################
-
-# Power analysis for colony size & nest properties linear mixed effects models
-# We used the simr package to test the power of each of our linear mixed effects models 
-# 1. Assign each model to an object
-# 2. Simulate the power of our models through 200 Monte Carlo simulations and use a likelihood ratio test for effect size
-
-# Wall weight
-# Linear mixed effects models
-# Brood
-fitBrood <- lmer(CollWallWt ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount)
-
-# Workers
-fitWorker <- lmer(CollWallWt ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-# Brood
-WallWtBrood <- powerSim(fitBrood, nsim = 200, fixed("Number.Colony", "lr"), progress = FALSE)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-# Workers
-WallWtWorker <- powerSim(fitWorker, nsim = 200, fixed("Number.Colony", "lr"), progress = FALSE)
-
-WallWtBrood
-
-WallWtWorker
-
-# Wall length
-# Linear mixed effects model 
-# Brood
-fitBrood1 <- lmer(Length ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount)
-
-# Workers
-fitWorker1 <- lmer(Length ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-# Brood
-LengthBrood <- powerSim(fitBrood1, nsim = 200, fixed("Number.Colony", "lr"), progress = FALSE)
-
-# Workers
-LengthWorker <- powerSim(fitWorker1, nsim = 200, fixed("Number.Colony", "lr"), progress = FALSE)
-
-LengthBrood
-
-LengthWorker
-
-# Wall area
-# Linear mixed effects models
-# Brood
-fitBrood2 <- lmer(Area ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount)
-
-# Workers
-fitWorker2 <- lmer(Area ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-# Brood
-AreaBrood <- powerSim(fitBrood2, nsim = 200, fixed("Number.Colony", "lr"), progress = FALSE)
-
-# Workers
-AreaWorker <- powerSim(fitWorker2, nsim = 200, fixed("Number.Colony", "lr"), progress = FALSE)
-
-AreaBrood
-
-AreaWorker
-
-# Wall density
-# Linear mixed effects models
-# Brood
-fitBrood3 <- lmer(Density ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount)
-
-# Workers
-fitWorker3 <- lmer(Density ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-# Brood
-DensityBrood <- powerSim(fitBrood3, nsim = 200, fixed("Number.Colony", "lr"), progress = FALSE)
-
-# Workers
-DensityWorker <- powerSim(fitWorker3, nsim = 200, fixed("Number.Colony", "lr"), progress = FALSE)
-
-DensityBrood
-
-DensityWorker
-
-# Wall composition
-# Linear mixed effects models
-# Brood
-fitBrood4 <- lmer(PropIIWall ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount)
-
-# Workers
-fitWorker4 <- lmer(PropIIWall ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-# Brood
-CompnBrood <- powerSim(fitBrood4, nsim = 200, fixed("Number.Colony", "lr"), progress = FALSE)
-
-# Workers
-CompnWorker <- powerSim(fitWorker4, nsim = 200, fixed("Number.Colony", "lr"), progress = FALSE)
-
-CompnBrood
-
-CompnWorker
-
-# Internal nest area
-# Linear mixed effects models
-# Brood
-fitBrood5 <- lmer(Nest.Area ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount)
-
-# Workers
-fitWorker5 <- lmer(Nest.Area ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount)
-
-# Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
-# Brood
-Int.AreaBrood <- powerSim(fitBrood5, nsim = 200, fixed("Number.Colony", "lr"), progress = FALSE)
-
-# Workers
-Int.AreaWorker <- powerSim(fitWorker5, nsim = 200, fixed("Number.Colony", "lr"), progress = FALSE)
-
-Int.AreaBrood
-
-Int.AreaWorker
-
-#########################################################################################################################################
 # WORKER AND BROOD DEATH AND RELATIVE HUMIDITY: FINAL DATASET
 # The script below is create the final dataset for testing the relationship between humidity exposure and colony worker and brood death
 #########################################################################################################################################
 
 # Joining the mean humidity values (SupplementalHygrometerDatabaseReduced) to the worker and brood % loss dataset (HumidMortalityRaw)
 HumidMortality <- HumidMortalityRaw %>%
-  left_join(SupplementalHygrometerDatabaseReduced) %>%
+  left_join(Complete_Data_Final_ColonyCount) %>%
   select(-c(TrialNumber))
 
 WorkerMortality <- HumidMortality %>%
@@ -848,8 +676,7 @@ MortalityPlots <- full_join(WorkerMortality, BroodMortality)
 # Scatter plots with humidity (%) on the x-axis and either worker and brood death on the y-axis (% less after trial 1)
 # Plot, axes, and legend titles are specified
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
-
-ggplot(MortalityPlots, aes(x = Humidity, y = ColonyDeath, color = ColonyMember)) +
+ggplot(MortalityPlots, aes(x = Humidity, y = ColonyDeath * 100, color = ColonyMember)) +
   geom_point(size = 6, alpha = 0.66) +
   xlab("Relative Humidity (%)") +
   ylab("Colony member death (%)") +
@@ -874,11 +701,104 @@ summary(glm(WorkerDeath ~ Humidity, family = "binomial", data = HumidMortality))
 # Brood
 summary(glm(BroodDeath ~ Humidity, family = "binomial", data = HumidMortality))
 
+# COMPARING AVERAGE WORKERS AND BROOD IN TRIAL 1 VS. TRIAL 2
+# Workers
+# Trial 1
+Complete_Data_FinalWorkerCount1 <- Complete_Data_FinalWorkerCount %>%
+  filter(Trial == 1) %>%
+  rename(Number.Worker1 = Number.Colony) %>%
+  select(Colony, Number.Worker1)
+
+# Trial 2
+Complete_Data_FinalWorkerCount2 <- Complete_Data_FinalWorkerCount %>%
+  filter(Trial == 2) %>%
+  rename(Number.Worker2 = Number.Colony) %>%
+  select(Colony, Number.Worker2) 
+
+# Trial 1 v. trial 2 worker data set
+Complete_Size_Workers <- full_join(Complete_Data_FinalWorkerCount1, Complete_Data_FinalWorkerCount2) %>% 
+  drop_na()
+
+# Linear regression comparing the log trial 1 workers vs log trial 2 workers
+regWork <- lm(log(Number.Worker1) ~ log(Number.Worker2), Complete_Size_Workers)
+
+# Linear regression offsetting the slope of the above regression to 1
+regWork1 <- lm(log(Number.Worker1) ~ 1 + offset(log(Number.Worker2)), Complete_Size_Workers)
+
+# Model comparison using an ANOVA
+anova(regWork, regWork1)
+
+# Scatter plot with regression lines from the models above
+WorkerMortalityNumber <- ggplot(Complete_Size_Workers, aes(x = log(Number.Worker1), y = log(Number.Worker2))) +
+  geom_point(size = 6, alpha = 0.66) +
+  geom_smooth(method = lm, color = "red", se = FALSE, size = 1.33) +
+  geom_abline(slope = 1, size = 1.33) + 
+  xlab("Log avg. worker trial 1") +
+  ylab("Log avg. worker trial 2") +
+  theme_pubclean() +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_text(size = 22,  color = "black"),
+        axis.title.y = element_text(size = 22,  color = "black"),
+        axis.title.x = element_text(size = 22,  color = "black"))+ 
+  ylim(2, 7)
+
+# Brood
+# Trial 1
+Complete_Data_FinalBroodCount1 <- Complete_Data_FinalBroodCount %>%
+  filter(Trial == 1) %>%
+  rename(Number.Brood1 = Number.Colony) %>%
+  select(Colony, Number.Brood1)
+
+# Trial 2
+Complete_Data_FinalBroodCount2 <- Complete_Data_FinalBroodCount %>%
+  filter(Trial == 2) %>%
+  rename(Number.Brood2 = Number.Colony) %>%
+  select(Colony, Number.Brood2) 
+
+# Trial 1 v. trial 2 brood data set
+Complete_Size_Brood <- full_join(Complete_Data_FinalBroodCount1, Complete_Data_FinalBroodCount2) %>% 
+  drop_na()
+
+# Linear regression comparing the log trial 1 brood vs log trial 2 brood 
+regBrood <- lm(log(Number.Brood1) ~ log(Number.Brood2), Complete_Size_Brood)
+
+# Linear regression offsetting the slope of the above regression to 1
+regBrood1 <- lm(log(Number.Brood1) ~ 1 + offset(log(Number.Brood2)), Complete_Size_Brood)
+
+# Model comparison using an ANOVA
+anova(regBrood, regBrood1)
+
+# Scatter plot with regression lines from the models above
+BroodMortalityNumber <- ggplot(Complete_Size_Brood, aes(x = log(Number.Brood1), y = log(Number.Brood2))) +
+  geom_point(size = 6, alpha = 0.66) +
+  geom_smooth(method = lm, color = "red", se = FALSE, size = 1.33) +
+  geom_abline(slope = 1, size = 1.33) + 
+  xlab("Log avg. brood trial 1") +
+  ylab("Log avg. brood trial 2") +
+  theme_pubclean() +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_text(size = 22,  color = "black"),
+        axis.title.y = element_text(size = 22,  color = "black"),
+        axis.title.x = element_text(size = 22,  color = "black")) + 
+  ylim(2, 7)
+
+# Arrange all plots relating the average number of workers and brood in both trials
+ggarrange(BroodMortalityNumber, WorkerMortalityNumber,
+                              labels = c("(a)", "(b)"),
+                              font.label = list(size = 26,  face = "plain"),
+                              label.x = 0.85,
+                              ncol = 2, nrow = 1,
+                              common.legend = TRUE,
+                              legend = "top")
+
 #########################################################################################################################################
 # POROSITY COMPARISONS: PLOTS AND ANALYSES
 # The script below is to plot and analyze the porosities of experimental substrates, built walls, and natural walls
 ##########################################################################################################################################
-# Uses the PorosityComparison dataset
+# Uses the PorosityComparisonRaw dataset
+PorosityComparison <- PorosityComparisonRaw %>%
+  # Calculate porosity 
+  mutate(Porosity = (PoreVolume / TotalVolume) * 100)
 
 # Creating data subsets for plotting and Mann-Whitney U tests comparing all porosity combinations
 # Substrate I
