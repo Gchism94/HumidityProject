@@ -3,8 +3,12 @@
 ## Overview 
 Data and R script used for manuscript: _Temnothorax rugatulus_ ants do not change their nest walls in response to environmental humidity 
 
+***
+
 ## Purpose of the study 
 ### The regulation of humidity is one purpose of ant nests. _Temnothorax rugatulus_ colonies modify their nests in rock crevices through walls build from environmental substrates. This study examines whether _T. rugatulus_ colonies change their built nest walls in response to environmental humidity. 
+
+***
 
 ## Dependencies
 ##### The run order for the scripts: 
@@ -13,6 +17,8 @@ Data and R script used for manuscript: _Temnothorax rugatulus_ ants do not chang
 ##### The script "Humidity_Script.R" is executable so long as all data are loaded into the environment
 ##### Several packages are required, however all are loaded through the package "pacman", so be certain to install this package before running any other code.
 ##### See the following documentation for further information on the "pacman" package: https://www.rdocumentation.org/packages/pacman/versions/0.5.1 
+
+***
 
 ## Structure of the data
 #### SupplementalHygrometerDatabase.csv
@@ -24,6 +30,8 @@ Data and R script used for manuscript: _Temnothorax rugatulus_ ants do not chang
 * Temp: Temperature in celcius
 * RH: Relative humidity (%) 
 * Trial: The trial number for each individual colony, each colony underwent two trials
+
+***
 
 #### HumidityExperimentalDatabase.csv
 ###### Raw experimental data with nest features and colony size
@@ -46,12 +54,16 @@ Data and R script used for manuscript: _Temnothorax rugatulus_ ants do not chang
 * UsedWtII: The weight (g) of the available substrate II building nest wall material following the experimental building phase
 * CollWallWt: The weight (g) of the experimental nest wall that each colony built
 
+***
+
 #### HumidMortalityRaw.csv
 ###### Raw experimental data with proportion of workers and brood dead after each colony underwent Trial 1
 * Colony: Unique experimental colony identifiers
 * WorkerDeath: Proportion of workers that died 
 * BroodDeath: Proportion of brood that died 
 * TrialNumber: Sequential trial number (1-4) that is NOT unique for each colony
+
+***
 
 #### PorosityComparisonRaw.csv
 ###### Data used for comparing the porosities of each experimental substrate, experimentally built walls, and collected _Temnothorax rugatulus_ walls
