@@ -53,12 +53,12 @@ Data and R script used for manuscript: _Temnothorax rugatulus_ ants do not chang
 * BroodDeath: Proportion of brood that died 
 * TrialNumber: Sequential trial number (1-4) that is NOT unique for each colony
 
-#### PorosityComparison.csv
-###### Data comparing the porosities of each experimental substrate, experimentally built walls, and collected _Temnothorax rugatulus_ walls
+#### PorosityComparisonRaw.csv
+###### Data used for comparing the porosities of each experimental substrate, experimentally built walls, and collected _Temnothorax rugatulus_ walls
+###### Porosity is the percentage of void space in compact substrate - PoreVolume/TotalVolume
 * SubstrateID: A unique identifier for each substrate replicate
 * Trial: The trial number for each individual colony, each colony underwent two trials (only applicable for experimentally built walls) 
 * SubCategory: The type of substrate (Sub I, Sub II, Built, Natural)
 * TotalVolume: The combined pore (void space in compact substrate grains) and soil volume (ml) of a substrate
-* SoilVolume: The volume that the soil filled (ml), without pore volume (ml)
 * PoreVolume: The void space in between compact substrate grains (ml)
-* Porosity: The percentage of void space in compact substrate - PoreVolume/TotalVolume
+
