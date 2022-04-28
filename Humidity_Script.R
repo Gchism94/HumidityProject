@@ -1,7 +1,7 @@
 #########################################################################################################################################
 # Author: GREG CHISM
-# Date: Nov 2021
-# email: gchism@email.arizona.edu
+# Date: APR 2022
+# email: gchism@arizona.edu
 # Project: "Temnothorax rugatulus" ants do not change their nest walls in response to environmental humidity
 # Title: Humidity, colony percentage death, porosity data grooming, visualization, and analyses
 #########################################################################################################################################
@@ -19,7 +19,6 @@ pacman::p_load(FSA,
                lme4,
                lmerTest,
                MuMIn,
-               papeR,
                scales,
                simr,
                tidyverse)
@@ -77,7 +76,7 @@ Complete_Data_final_Trial1 <- HumidityExperimentalDatabase %>%
   filter(Trial == 1) %>%
   # Calculate nest wall volume as Area * 1.5, which is the height of the nest
   mutate(Volume = Area * 1.5,
-  # Calculate nest wall density: If wall volume isn't 0, then calculate by dividing wall weight and wall volume, else 0
+         # Calculate nest wall density: If wall volume isn't 0, then calculate by dividing wall weight and wall volume, else 0
          Density = ifelse(Volume != 0, CollWallWt / Volume, 0),
          PropIIWall = ((StartWtII - UsedWtII) / (StartWtII - UsedWtII + StartWtI - UsedWtI)),
          PropIWall = 1 - PropIIWall) %>%
@@ -93,25 +92,6 @@ Complete_Data_final_Trial2 <- HumidityExperimentalDatabase %>%
          PropIIWall = ((StartWtII - UsedWtII) / (StartWtII - UsedWtII + StartWtI - UsedWtI)),
          PropIWall = 1 - PropIIWall) %>%
   left_join(SupplementalHygrometerDatabaseReduced)
-
-# First we remove colonies with high mortality (>50% brood or worker death - from the HumidMortalityRaw data set)
-Complete_Data_final_Trial2 <- HumidMortalityRaw %>% 
-  # Don't need trial number
-  select(-c(TrialNumber)) %>%
-  # Right join to humidity & wall properties data set
-  right_join(HumidityExperimentalDatabase %>%
-               # Keep trial 2 data
-               filter(Trial == 2)) %>%
-  # Keep colonies with <50% mortality
-  filter(WorkerDeath <= 0.5 & BroodDeath <= 0.5) %>%
-  # Calculate nest wall volume as Area * 1.5, which is the height of the nest
-  mutate(Volume = Area * 1.5,
-  # Calculate nest wall density: If wall volume isn't 0, then calculate by dividing wall weight and wall volume, else 0
-       Density = ifelse(Volume != 0, CollWallWt / Volume, 0),
-       PropIIWall = ((StartWtII - UsedWtII) / (StartWtII - UsedWtII + StartWtI - UsedWtI)),
-       PropIWall = 1 - PropIIWall) %>%
-  left_join(SupplementalHygrometerDatabaseReduced) %>%
-  select(-c(WorkerDeath, BroodDeath))
 
 # Full join data for plots & analyses 
 Complete_Data_Final <- full_join(Complete_Data_final_Trial1, Complete_Data_final_Trial2)
@@ -326,16 +306,16 @@ r.squaredGLMM(lmer(Nest.Area ~ Humidity + (1|Trial), data = Complete_Data_Final)
 
 # Arrange all plots relating to the effect of humidity on nest wall traits
 HumidPlots <- ggarrange(WeightPlot, LengthPlot,
-                       AreaPlot, DensityPlot,
-                       CompnPlot, IntAreaPlot,
-                       labels = c("(a)", "(b)",
-                                  "(c)", "(d)",
-                                  "(e)", "(f)"),
-                       font.label = list(size = 26,  face = "plain"),
-                       label.x = 0.9,
-                       ncol = 2, nrow = 3,
-                       common.legend = TRUE,
-                       legend = "top")
+                        AreaPlot, DensityPlot,
+                        CompnPlot, IntAreaPlot,
+                        labels = c("(a)", "(b)",
+                                   "(c)", "(d)",
+                                   "(e)", "(f)"),
+                        font.label = list(size = 26,  face = "plain"),
+                        label.x = 0.9,
+                        ncol = 2, nrow = 3,
+                        common.legend = TRUE,
+                        legend = "top")
 
 # Annotate the arranged plot
 annotate_figure(HumidPlots,
@@ -418,7 +398,7 @@ WeightPlotColony <- ggplot(Complete_Data_Final_ColonyCount, aes(x = Number.Colon
   guides(shape = guide_legend(title = "Trial"),
          color = guide_legend(title = "Colony member")) +
   scale_color_manual(breaks = c("Brood", "Workers"), 
-                    values = c("red", "blue")) +
+                     values = c("red", "blue")) +
   scale_x_continuous(breaks = seq(75, 225, by = 75))
 
 # Linear mixed effects models that examine the relationship between the number of ants and brood in a colony and wall weight
@@ -628,16 +608,16 @@ r.squaredGLMM(lmer(Nest.Area ~ Number.Colony + (1|Trial), data = Complete_Data_F
 
 # Arrange all plots relating to the effect of colony size on nest wall traits
 HumidPlotsColony <- ggarrange(WeightPlotColony, LengthPlotColony,
-                       AreaPlotColony, DensityPlotColony,
-                       CompnPlotColony, IntAreaColony,
-                       labels = c("(a)", "(b)",
-                                  "(c)", "(d)",
-                                  "(e)", "(f)"),
-                       font.label = list(size = 26,  face = "plain"),
-                       label.x = 0.9,
-                       ncol = 2, nrow = 3,
-                       common.legend = TRUE,
-                       legend = "top")
+                              AreaPlotColony, DensityPlotColony,
+                              CompnPlotColony, IntAreaColony,
+                              labels = c("(a)", "(b)",
+                                         "(c)", "(d)",
+                                         "(e)", "(f)"),
+                              font.label = list(size = 26,  face = "plain"),
+                              label.x = 0.9,
+                              ncol = 2, nrow = 3,
+                              common.legend = TRUE,
+                              legend = "top")
 
 # Annotate the combined plot
 annotate_figure(HumidPlotsColony,
@@ -705,46 +685,6 @@ summary(glm(WorkerDeath ~ Humidity, family = "binomial", data = HumidMortality))
 summary(glm(BroodDeath ~ Humidity, family = "binomial", data = HumidMortality))
 
 # COMPARING AVERAGE WORKERS AND BROOD IN TRIAL 1 VS. TRIAL 2
-# Workers
-# Trial 1
-Complete_Data_FinalWorkerCount1 <- Complete_Data_FinalWorkerCount %>%
-  filter(Trial == 1) %>%
-  rename(Number.Worker1 = Number.Colony) %>%
-  select(Colony, Number.Worker1)
-
-# Trial 2
-Complete_Data_FinalWorkerCount2 <- Complete_Data_FinalWorkerCount %>%
-  filter(Trial == 2) %>%
-  rename(Number.Worker2 = Number.Colony) %>%
-  select(Colony, Number.Worker2) 
-
-# Trial 1 v. trial 2 worker data set
-Complete_Size_Workers <- full_join(Complete_Data_FinalWorkerCount1, Complete_Data_FinalWorkerCount2) %>% 
-  drop_na()
-
-# Linear regression comparing the log trial 1 workers vs log trial 2 workers
-regWork <- lm(log(Number.Worker1) ~ log(Number.Worker2), Complete_Size_Workers)
-
-# Linear regression offsetting the slope of the above regression to 1
-regWork1 <- lm(log(Number.Worker1) ~ 1 + offset(log(Number.Worker2)), Complete_Size_Workers)
-
-# Model comparison using an ANOVA
-anova(regWork, regWork1)
-
-# Scatter plot with regression lines from the models above
-WorkerMortalityNumber <- ggplot(Complete_Size_Workers, aes(x = log(Number.Worker1), y = log(Number.Worker2))) +
-  geom_point(size = 6, alpha = 0.66) +
-  geom_smooth(method = lm, color = "red", se = FALSE, size = 1.33) +
-  geom_abline(slope = 1, size = 1.33) + 
-  xlab("Log avg. worker trial 1") +
-  ylab("Log avg. worker trial 2") +
-  theme_pubclean() +
-  theme(axis.ticks = element_blank(),
-        axis.text = element_text(size = 22,  color = "black"),
-        axis.title.y = element_text(size = 22,  color = "black"),
-        axis.title.x = element_text(size = 22,  color = "black"))+ 
-  ylim(2, 7)
-
 # Brood
 # Trial 1
 Complete_Data_FinalBroodCount1 <- Complete_Data_FinalBroodCount %>%
@@ -765,8 +705,12 @@ Complete_Size_Brood <- full_join(Complete_Data_FinalBroodCount1, Complete_Data_F
 # Linear regression comparing the log trial 1 brood vs log trial 2 brood 
 regBrood <- lm(log(Number.Brood1) ~ log(Number.Brood2), Complete_Size_Brood)
 
+summary(regBrood)
+
 # Linear regression offsetting the slope of the above regression to 1
 regBrood1 <- lm(log(Number.Brood1) ~ 1 + offset(log(Number.Brood2)), Complete_Size_Brood)
+
+summary(regBrood1)
 
 # Model comparison using an ANOVA
 anova(regBrood, regBrood1)
@@ -785,14 +729,58 @@ BroodMortalityNumber <- ggplot(Complete_Size_Brood, aes(x = log(Number.Brood1), 
         axis.title.x = element_text(size = 22,  color = "black")) + 
   ylim(2, 7)
 
+# Workers
+# Trial 1
+Complete_Data_FinalWorkerCount1 <- Complete_Data_FinalWorkerCount %>%
+  filter(Trial == 1) %>%
+  rename(Number.Worker1 = Number.Colony) %>%
+  select(Colony, Number.Worker1)
+
+# Trial 2
+Complete_Data_FinalWorkerCount2 <- Complete_Data_FinalWorkerCount %>%
+  filter(Trial == 2) %>%
+  rename(Number.Worker2 = Number.Colony) %>%
+  select(Colony, Number.Worker2) 
+
+# Trial 1 v. trial 2 worker data set
+Complete_Size_Workers <- full_join(Complete_Data_FinalWorkerCount1, Complete_Data_FinalWorkerCount2) %>% 
+  drop_na()
+
+# Linear regression comparing the log trial 1 workers vs log trial 2 workers
+regWork <- lm(log(Number.Worker1) ~ log(Number.Worker2), Complete_Size_Workers)
+
+summary(regWork)
+
+# Linear regression offsetting the slope of the above regression to 1
+regWork1 <- lm(log(Number.Worker1) ~ 1 + offset(log(Number.Worker2)), Complete_Size_Workers)
+
+summary(regWork1)
+
+# Model comparison using an ANOVA
+anova(regWork, regWork1)
+
+# Scatter plot with regression lines from the models above
+WorkerMortalityNumber <- ggplot(Complete_Size_Workers, aes(x = log(Number.Worker1), y = log(Number.Worker2))) +
+  geom_point(size = 6, alpha = 0.66) +
+  geom_smooth(method = lm, color = "red", se = FALSE, size = 1.33) +
+  geom_abline(slope = 1, size = 1.33) + 
+  xlab("Log avg. worker trial 1") +
+  ylab("Log avg. worker trial 2") +
+  theme_pubclean() +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_text(size = 22,  color = "black"),
+        axis.title.y = element_text(size = 22,  color = "black"),
+        axis.title.x = element_text(size = 22,  color = "black"))+ 
+  ylim(2, 7)
+
 # Arrange all plots relating the average number of workers and brood in both trials
 ggarrange(BroodMortalityNumber, WorkerMortalityNumber,
-                              labels = c("(a)", "(b)"),
-                              font.label = list(size = 26,  face = "plain"),
-                              label.x = 0.85,
-                              ncol = 2, nrow = 1,
-                              common.legend = TRUE,
-                              legend = "top")
+          labels = c("(a)", "(b)"),
+          font.label = list(size = 26,  face = "plain"),
+          label.x = 0.85,
+          ncol = 2, nrow = 1,
+          common.legend = TRUE,
+          legend = "top")
 
 #########################################################################################################################################
 # POROSITY COMPARISONS: PLOTS AND ANALYSES
