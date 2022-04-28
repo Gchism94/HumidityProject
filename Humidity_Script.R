@@ -37,7 +37,7 @@ SupplementalHygrometerDatabase <- read.csv("SupplementalHygrometerDatabase.csv")
 HumidMortalityRaw <- read.csv("HumidMortalityRaw.csv")
 
 # Porosity values for all substrates
-PorosityComparison <- read.csv("PorosityComparison.csv")
+PorosityComparisonRaw <- read.csv("PorosityComparisonRaw.csv")
 
 #########################################################################################################################################
 # MEAN HUMIDITY VALUES
@@ -118,11 +118,11 @@ Complete_Data_Final <- full_join(Complete_Data_final_Trial1, Complete_Data_final
 
 #########################################################################################################################################
 # RATIO OF SUBSTRATE II USED
-# The script below used binomial tests to see if a building substrate or substrate placement (left / right) was favored
+# The script below used one-sample Wilcoxon tests to see if a building substrate or substrate placement (left / right) was different than 0.5
 # The script also finds the median ratio of substrate II used in wall building for both trials
 #########################################################################################################################################
 
-# One-sample wilcoxon tests to determine whether the ratio of substrate II used was greater thatn 50%
+# One-sample Wilcoxon tests to determine whether the ratio of substrate II used was greater than 0.5
 # Trial 1
 wilcox.test(Complete_Data_final_Trial1$PropIIWall, mu = 0.5, alternative = "two.sided")
 
@@ -132,13 +132,17 @@ wilcox.test(Complete_Data_final_Trial2$PropIIWall, mu = 0.5, alternative = "two.
 # Median amount of substrate I and substrate II used to build walls, and the median ratio
 # Trial 1
 Complete_Data_final_Trial1 %>%
-  mutate(MedSubI = median(StartWtI - UsedWtI), MedSubII = median(StartWtII - UsedWtII), MedRatio = median(PropIIWall)) %>%
+  mutate(MedSubI = median(StartWtI - UsedWtI), 
+         MedSubII = median(StartWtII - UsedWtII), 
+         MedRatio = median(PropIIWall)) %>%
   select(c(MedSubI, MedSubII, MedRatio)) %>%
   distinct()
 
 # Trial 2
 Complete_Data_final_Trial2 %>%
-  mutate(MedSubI = median(StartWtI - UsedWtI), MedSubII = median(StartWtII - UsedWtII), MedRatio = median(PropIIWall)) %>%
+  mutate(MedSubI = median(StartWtI - UsedWtI), 
+         MedSubII = median(StartWtII - UsedWtII), 
+         MedRatio = median(PropIIWall)) %>%
   select(c(MedSubI, MedSubII, MedRatio)) %>%
   distinct()
 
@@ -418,15 +422,14 @@ WeightPlotColony <- ggplot(Complete_Data_Final_ColonyCount, aes(x = Number.Colon
   scale_x_continuous(breaks = seq(75, 225, by = 75))
 
 # Linear mixed effects models that examine the relationship between the number of ants and brood in a colony and wall weight
-
 # Number of brood
-summary(lmer(CollWallWt ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount))$coefficients
+summary(lmer(CollWallWt ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount))
 
 # Marginal and conditional r-squared
 r.squaredGLMM(lmer(CollWallWt ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount))
 
 # Number of workers
-summary(lmer(CollWallWt ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount))$coefficients
+summary(lmer(CollWallWt ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount))
 
 # Marginal and conditional r-squared
 r.squaredGLMM(lmer(CollWallWt ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount))
@@ -496,13 +499,13 @@ AreaPlotColony <- ggplot(Complete_Data_Final_ColonyCount, aes(x = Number.Colony,
 
 # Linear mixed effects models that examine the relationship between the number of ants and brood in a colony and wall area
 # Number of brood
-summary(lmer(Area ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount))$coefficients
+summary(lmer(Area ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount))
 
 # Marginal and conditional r-squared
 r.squaredGLMM(lmer(Area ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount))
 
 # Number of workers
-summary(lmer(Area ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount))$coefficients
+summary(lmer(Area ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount))
 
 # Marginal and conditional r-squared
 r.squaredGLMM(lmer(Area ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount))
@@ -542,7 +545,7 @@ summary(lmer(Density ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroo
 r.squaredGLMM(lmer(Density ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount))
 
 # Number of workers
-summary(lmer(Density ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount))$coefficients
+summary(lmer(Density ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount))
 
 # Marginal and conditional r-squared
 r.squaredGLMM(lmer(Density ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount))
@@ -571,7 +574,7 @@ CompnPlotColony <- ggplot(Complete_Data_Final_ColonyCount, aes(x = Number.Colony
                      values = c("red", "blue")) +
   scale_x_continuous(breaks = seq(75, 225, by = 75))
 
-# Linear mixed effects models that examine the relationship between the number of ants and brood in a colony and wall area
+# Linear mixed effects models that examine the relationship between the number of ants and brood in a colony and wall composition
 
 # Number of brood
 summary(lmer(PropIIWall ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount))
@@ -580,7 +583,7 @@ summary(lmer(PropIIWall ~ Number.Colony + (1|Trial), data = Complete_Data_FinalB
 r.squaredGLMM(lmer(PropIIWall ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount))
 
 # Number of workers
-summary(lmer(PropIIWall ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount))$coefficients
+summary(lmer(PropIIWall ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount))
 
 # Marginal and conditional r-squared
 r.squaredGLMM(lmer(PropIIWall ~ Number.Colony + (1|Trial), data = Complete_Data_FinalWorkerCount))
@@ -610,7 +613,7 @@ IntAreaColony <- ggplot(Complete_Data_Final_ColonyCount, aes(x = Number.Colony, 
   ylim(0, 8000) +
   scale_x_continuous(breaks = seq(75, 225, by = 75)) 
 
-# Linear mixed effects models that examine the relationship between the number of ants and brood in a colony and wall area
+# Linear mixed effects models that examine the relationship between the number of ants and brood in a colony and internal nest area
 # Number of brood
 summary(lmer(Nest.Area ~ Number.Colony + (1|Trial), data = Complete_Data_FinalBroodCount))
 
