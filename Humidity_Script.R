@@ -623,7 +623,7 @@ HumidPlotsColony <- ggarrange(WeightPlotColony, LengthPlotColony,
 annotate_figure(HumidPlotsColony,
                 top = NULL,
                 bottom = text_grob("Number of workers / brood", color = "black",
-                                   size = 32, x = 0.5, y = 0.5, family = "Arial"),
+                                   size = 32, x = 0.5, y = 0.5),
                 left = NULL,
                 right = NULL
 )
@@ -818,7 +818,7 @@ ggplot(PorosityComparison, aes(x = reorder(SubCategory, Porosity, FUN = median),
   geom_bracket(
     xmin = c("Sub I", "Sub I", "Sub I", "Sub II", "Built", "Built"), xmax = c("Sub II", "Natural", "Built", "Natural", "Sub II", "Natural"),
     y.position = c(90, 87, 84, 73, 77, 81), label = c("***", "***", "***", "NS", "NS", "NS"),
-    tip.length = 0.01, size = 0.65, label.size = 6, family = "Arial") +
+    tip.length = 0.01, size = 0.65, label.size = 6) +
   ggtitle("Porosity comparison") +
   xlab("Substrate category") +
   ylab("Porosity (%)") +
