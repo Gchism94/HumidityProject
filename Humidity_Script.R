@@ -136,18 +136,18 @@ Complete_Data_final_Trial2 %>%
 # Plot, axes, and legend titles are specified
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
 WeightPlot <- ggplot(Complete_Data_Final, aes(x = Humidity, y = CollWallWt, shape = as.factor(Trial))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   ggtitle("Wall weight") +
   xlab("Relative humidity (%)") +
   ylab(expression(paste('Wall weight (g)'))) +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 26, color = "black", hjust = 0.850, vjust = 0),
-        axis.text = element_text(size = 26, color = "black"),
-        axis.title.y = element_text(size = 26, color = "black"),
-        axis.title.x = element_text(size = 26, color = "white"),
-        legend.text = element_text(size = 26, color = "black"),
-        legend.title = element_text(size = 26,color = "black"),
+        plot.title = element_text(size = 11, color = "black", hjust = 0.850, vjust = 0),
+        axis.text = element_text(size = 11, color = "black"),
+        axis.title.y = element_text(size = 11, color = "black"),
+        axis.title.x = element_text(size = 11, color = "white"),
+        legend.text = element_text(size = 11, color = "black"),
+        legend.title = element_text(size = 11,color = "black"),
         legend.position = "right",
         legend.key = element_blank()) +
   guides(shape = guide_legend(title = "Trial")) 
@@ -163,18 +163,18 @@ r.squaredGLMM(lmer(CollWallWt ~ Humidity + (1|Trial), data = Complete_Data_Final
 # Plot, axes, and legend titles are specified
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
 LengthPlot <- ggplot(Complete_Data_Final, aes(x = Humidity, y = Length, shape = as.factor(Trial))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   ggtitle("Wall length") +
   xlab("Relative humidity (%)") +
   ylab("Wall length (mm)")+
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 26, color = "black", hjust = 0.850, vjust = 0),
-        axis.text = element_text(size = 26, color = "black"),
-        axis.title.y = element_text(size = 26, color = "black"),
-        axis.title.x = element_text(size = 26, color = "white"),
-        legend.text = element_text(size = 26, color = "black"),
-        legend.title = element_text(size = 26,color = "black"),
+        plot.title = element_text(size = 11, color = "black", hjust = 0.850, vjust = 0),
+        axis.text = element_text(size = 11, color = "black"),
+        axis.title.y = element_text(size = 11, color = "black"),
+        axis.title.x = element_text(size = 11, color = "white"),
+        legend.text = element_text(size = 11, color = "black"),
+        legend.title = element_text(size = 11,color = "black"),
         legend.position = "right",
         legend.key = element_blank()) +
   guides(shape = guide_legend(title = "Trial")) +
@@ -191,18 +191,18 @@ r.squaredGLMM(lmer(Length ~ Humidity + (1|Trial), data = Complete_Data_Final))
 # Plot, axes, and legend titles are specified
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
 AreaPlot <- ggplot(Complete_Data_Final, aes(x = Humidity, y = Area, shape = as.factor(Trial))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   ggtitle("Wall area") +
   xlab("Relative humidity (%)") +
   ylab(expression(paste('Wall area ('*mm^2*')'))) +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 26, color = "black", hjust = 0.850, vjust = 0),
-        axis.text = element_text(size = 26, color = "black"),
-        axis.title.y = element_text(size = 26, color = "black"),
-        axis.title.x = element_text(size = 26, color = "white"),
-        legend.text = element_text(size = 26, color = "black"),
-        legend.title = element_text(size = 26,color = "black"),
+        plot.title = element_text(size = 11, color = "black", hjust = 0.850, vjust = 0),
+        axis.text = element_text(size = 11, color = "black"),
+        axis.title.y = element_text(size = 11, color = "black"),
+        axis.title.x = element_text(size = 11, color = "white"),
+        legend.text = element_text(size = 11, color = "black"),
+        legend.title = element_text(size = 11,color = "black"),
         legend.position = "right",
         legend.key = element_blank()) +
   guides(shape = guide_legend(title = "Trial")) +
@@ -223,18 +223,18 @@ r.squaredGLMM(lmer(Area ~ Humidity + (1|Trial), data = Complete_Data_Final))
 scaleFUN <- function(x) sprintf("%.4f", x)
 
 DensityPlot <- ggplot(Complete_Data_Final, aes(x = Humidity, y = Density, shape = as.factor(Trial))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   ggtitle("Wall density") +
   xlab("Relative humidity (%)") +
   ylab(expression(paste('Wall density ('*g/mm^{3}*')'))) +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 26, color = "black", hjust = 0.785, vjust = 0),
-        axis.text = element_text(size = 26, color = "black"),
-        axis.title.y = element_text(size = 26, color = "black"),
-        axis.title.x = element_text(size = 26, color = "white"),
-        legend.text = element_text(size = 26, color = "black"),
-        legend.title = element_text(size = 26,color = "black"),
+        plot.title = element_text(size = 11, color = "black", hjust = 0.785, vjust = 0),
+        axis.text = element_text(size = 11, color = "black"),
+        axis.title.y = element_text(size = 11, color = "black"),
+        axis.title.x = element_text(size = 11, color = "white"),
+        legend.text = element_text(size = 11, color = "black"),
+        legend.title = element_text(size = 11,color = "black"),
         legend.position = "right",
         legend.key = element_blank()) +
   guides(shape = guide_legend(title = "Trial")) +
@@ -253,18 +253,18 @@ r.squaredGLMM(lmer(Density ~ Humidity + (1|Trial), data = Complete_Data_Final))
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
 
 CompnPlot <- ggplot(Complete_Data_Final, aes(x = Humidity, y = PropIIWall, shape = as.factor(Trial))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   ggtitle("Wall composition") +
   xlab("Relative humidity (%)") +
   ylab("Substrate II propn") +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 26, color = "black", hjust = 0.795, vjust = 0),
-        axis.text = element_text(size = 26, color = "black"),
-        axis.title.y = element_text(size = 26, color = "black"),
-        axis.title.x = element_text(size = 26, color = "white"),
-        legend.text = element_text(size = 26, color = "black"),
-        legend.title = element_text(size = 26,color = "black"),
+        plot.title = element_text(size = 11, color = "black", hjust = 0.795, vjust = 0),
+        axis.text = element_text(size = 11, color = "black"),
+        axis.title.y = element_text(size = 11, color = "black"),
+        axis.title.x = element_text(size = 11, color = "white"),
+        legend.text = element_text(size = 11, color = "black"),
+        legend.title = element_text(size = 11,color = "black"),
         legend.position = "right",
         legend.key = element_blank()) +
   guides(shape = guide_legend(title = "Trial")) +
@@ -281,18 +281,18 @@ r.squaredGLMM(lmer(PropIIWall ~ Humidity + (1|Trial), data = Complete_Data_Final
 # Plot, axes, and legend titles are specified
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
 IntAreaPlot <- ggplot(Complete_Data_Final, aes(x = Humidity, y = Nest.Area, shape = as.factor(Trial))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   ggtitle("Internal nest area") +
   xlab("Relative humidity (%)") +
   ylab(expression(paste('Nest area ('*mm^2*')'))) +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 26, color = "black", hjust = 0.720, vjust = 0),
-        axis.text = element_text(size = 26, color = "black"),
-        axis.title.y = element_text(size = 26, color = "black"),
-        axis.title.x = element_text(size = 26, color = "white"),
-        legend.text = element_text(size = 26, color = "black"),
-        legend.title = element_text(size = 26,color = "black"),
+        plot.title = element_text(size = 11, color = "black", hjust = 0.720, vjust = 0),
+        axis.text = element_text(size = 11, color = "black"),
+        axis.title.y = element_text(size = 11, color = "black"),
+        axis.title.x = element_text(size = 11, color = "white"),
+        legend.text = element_text(size = 11, color = "black"),
+        legend.title = element_text(size = 11,color = "black"),
         legend.position = "right",
         legend.key = element_blank()) +
   guides(shape = guide_legend(title = "Trial")) +
@@ -311,20 +311,24 @@ HumidPlots <- ggarrange(WeightPlot, LengthPlot,
                         labels = c("(a)", "(b)",
                                    "(c)", "(d)",
                                    "(e)", "(f)"),
-                        font.label = list(size = 26,  face = "plain"),
+                        font.label = list(size = 11,  face = "plain"),
                         label.x = 0.9,
+                        label.y = 0.965,
                         ncol = 2, nrow = 3,
                         common.legend = TRUE,
                         legend = "top")
 
 # Annotate the arranged plot
-annotate_figure(HumidPlots,
+Humid_Plot_Full <- annotate_figure(HumidPlots,
                 top = NULL,
                 bottom = text_grob("Relative humidity (%)", color = "black",
-                                   size = 32, x = 0.5, y = 1),
+                                   size = 11, x = 0.5, y = 1.5),
                 left = NULL,
                 right = NULL
 )
+
+# Save plot as a PDF
+ggsave(file = "Fig3.tiff", plot = Humid_Plot_Full, width = 5.5, height = 5, units = "in", dpi = 300)
 
 #########################################################################################################################################
 # COLONY SIZE BOTH NEST WALL FEATURES AND INTERNAL NEST AREA: COMPARATIVE STATISTICS & DATA PROCESSING
@@ -381,18 +385,18 @@ Complete_Data_Final_ColonyCount <- full_join(Complete_Data_FinalWorkerCount, Com
 # Plot, axes, and legend titles are specified
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
 WeightPlotColony <- ggplot(Complete_Data_Final_ColonyCount, aes(x = Number.Colony, y = CollWallWt, color = ColonyMember, shape = as.factor(Trial))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   ggtitle("Wall weight") +
   xlab(NULL) +
   ylab(expression(paste('Wall weight (g)'))) +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 26,  color = "black", hjust = 0.850, vjust = 0),
-        axis.text = element_text(size = 26,  color = "black"),
-        axis.title.y = element_text(size = 26,  color = "black"),
-        axis.title.x = element_text(size = 26,  color = "white"),
-        legend.text = element_text(size = 26,  color = "black"),
-        legend.title = element_text(size = 26,  color = "black"),
+        plot.title = element_text(size = 10,  color = "black", hjust = 0.850, vjust = 0),
+        axis.text = element_text(size = 10,  color = "black"),
+        axis.title.y = element_text(size = 10,  color = "black"),
+        axis.title.x = element_text(size = 10,  color = "white"),
+        legend.text = element_text(size = 10,  color = "black"),
+        legend.title = element_text(size = 10,  color = "black"),
         legend.position = "right",
         legend.key = element_blank()) +
   guides(shape = guide_legend(title = "Trial"),
@@ -419,18 +423,18 @@ r.squaredGLMM(lmer(CollWallWt ~ Number.Colony + (1|Trial), data = Complete_Data_
 # Plot, axes, and legend titles are specified
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
 LengthPlotColony <- ggplot(Complete_Data_Final_ColonyCount, aes(x = Number.Colony, y = Length, color = ColonyMember, shape = as.factor(Trial))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   ggtitle("Wall length") +
   xlab(NULL) +
   ylab(expression(paste('Wall length (mm)'))) +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 26,  color = "black", hjust = 0.850, vjust = 0),
-        axis.text = element_text(size = 26,  color = "black"),
-        axis.title.y = element_text(size = 26,  color = "black"),
-        axis.title.x = element_text(size = 26,  color = "white"),
-        legend.text = element_text(size = 26,  color = "black"),
-        legend.title = element_text(size = 26,  color = "black"),
+        plot.title = element_text(size = 10,  color = "black", hjust = 0.850, vjust = 0),
+        axis.text = element_text(size = 10,  color = "black"),
+        axis.title.y = element_text(size = 10,  color = "black"),
+        axis.title.x = element_text(size = 10,  color = "white"),
+        legend.text = element_text(size = 10,  color = "black"),
+        legend.title = element_text(size = 10,  color = "black"),
         legend.position = "right",
         legend.key = element_blank()) +
   guides(shape = guide_legend(title = "Trial"),
@@ -457,18 +461,18 @@ r.squaredGLMM(lmer(Length ~ Number.Colony + (1|Trial), data = Complete_Data_Fina
 # Plot, axes, and legend titles are specified
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
 AreaPlotColony <- ggplot(Complete_Data_Final_ColonyCount, aes(x = Number.Colony, y = Area, color = ColonyMember, shape = as.factor(Trial))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   ggtitle("Wall area") +
   xlab(NULL) +
   ylab(expression(paste('Wall area ('*mm^2*')'))) +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 26,  color = "black", hjust = 0.850, vjust = 0),
-        axis.text = element_text(size = 26,  color = "black"),
-        axis.title.y = element_text(size = 26,  color = "black"),
-        axis.title.x = element_text(size = 26,  color = "white"),
-        legend.text = element_text(size = 26,  color = "black"),
-        legend.title = element_text(size = 26,  color = "black"),
+        plot.title = element_text(size = 10,  color = "black", hjust = 0.850, vjust = 0),
+        axis.text = element_text(size = 10,  color = "black"),
+        axis.title.y = element_text(size = 10,  color = "black"),
+        axis.title.x = element_text(size = 10,  color = "white"),
+        legend.text = element_text(size = 10,  color = "black"),
+        legend.title = element_text(size = 10,  color = "black"),
         legend.position = "right",
         legend.key = element_blank()) +
   guides(shape = guide_legend(title = "Trial"),
@@ -497,18 +501,18 @@ r.squaredGLMM(lmer(Area ~ Number.Colony + (1|Trial), data = Complete_Data_FinalW
 
 scaleFUN <- function(x) sprintf("%.4f", x)
 DensityPlotColony <- ggplot(Complete_Data_Final_ColonyCount, aes(x = Number.Colony, y = Density, color = ColonyMember, shape = as.factor(Trial))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   ggtitle("Wall density") +
   xlab(NULL) +
   ylab(expression(paste('Wall density ('*g/mm^{3}*')'))) +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 26,  color = "black", hjust = 0.825, vjust = 0),
-        axis.text = element_text(size = 26,  color = "black"),
-        axis.title.y = element_text(size = 26,  color = "black"),
-        axis.title.x = element_text(size = 26,  color = "white"),
-        legend.text = element_text(size = 26,  color = "black"),
-        legend.title = element_text(size = 26,  color = "black"),
+        plot.title = element_text(size = 10,  color = "black", hjust = 0.825, vjust = 0),
+        axis.text = element_text(size = 10,  color = "black"),
+        axis.title.y = element_text(size = 10,  color = "black"),
+        axis.title.x = element_text(size = 10,  color = "white"),
+        legend.text = element_text(size = 10,  color = "black"),
+        legend.title = element_text(size = 10,  color = "black"),
         legend.position = "right",
         legend.key = element_blank()) +
   guides(shape = guide_legend(title = "Trial"),
@@ -535,18 +539,18 @@ r.squaredGLMM(lmer(Density ~ Number.Colony + (1|Trial), data = Complete_Data_Fin
 # Plot, axes, and legend titles are specified
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
 CompnPlotColony <- ggplot(Complete_Data_Final_ColonyCount, aes(x = Number.Colony, y = PropIIWall, color = ColonyMember, shape = as.factor(Trial))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   ggtitle("Wall composition") +
   xlab(NULL) +
   ylab("Substrate II propn") +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 26,  color = "black", hjust = 0.825, vjust = 0),
-        axis.text = element_text(size = 26,  color = "black"),
-        axis.title.y = element_text(size = 26,  color = "black"),
-        axis.title.x = element_text(size = 26,  color = "white"),
-        legend.text = element_text(size = 26,  color = "black"),
-        legend.title = element_text(size = 26,  color = "black"),
+        plot.title = element_text(size = 10,  color = "black", hjust = 0.825, vjust = 0),
+        axis.text = element_text(size = 10,  color = "black"),
+        axis.title.y = element_text(size = 10,  color = "black"),
+        axis.title.x = element_text(size = 10,  color = "white"),
+        legend.text = element_text(size = 10,  color = "black"),
+        legend.title = element_text(size = 10,  color = "black"),
         legend.position = "right",
         legend.key = element_blank()) +
   guides(shape = guide_legend(title = "Trial")) +
@@ -573,18 +577,18 @@ r.squaredGLMM(lmer(PropIIWall ~ Number.Colony + (1|Trial), data = Complete_Data_
 # Plot, axes, and legend titles are specified
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
 IntAreaColony <- ggplot(Complete_Data_Final_ColonyCount, aes(x = Number.Colony, y = Nest.Area, color = ColonyMember, shape = as.factor(Trial))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   ggtitle("Internal nest area") +
   xlab(NULL) +
   ylab(expression(paste('Nest area ('*mm^2*')'))) +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 26,  color = "black", hjust = 0.775, vjust = 0),
-        axis.text = element_text(size = 26,  color = "black"),
-        axis.title.y = element_text(size = 26,  color = "black"),
-        axis.title.x = element_text(size = 26,  color = "white"),
-        legend.text = element_text(size = 26,  color = "black"),
-        legend.title = element_text(size = 26,  color = "black"),
+        plot.title = element_text(size = 10,  color = "black", hjust = 0.775, vjust = 0),
+        axis.text = element_text(size = 10,  color = "black"),
+        axis.title.y = element_text(size = 10,  color = "black"),
+        axis.title.x = element_text(size = 10,  color = "white"),
+        legend.text = element_text(size = 10,  color = "black"),
+        legend.title = element_text(size = 10,  color = "black"),
         legend.position = "right",
         legend.key = element_blank()) +
   guides(shape = guide_legend(title = "Trial")) +
@@ -613,20 +617,24 @@ HumidPlotsColony <- ggarrange(WeightPlotColony, LengthPlotColony,
                               labels = c("(a)", "(b)",
                                          "(c)", "(d)",
                                          "(e)", "(f)"),
-                              font.label = list(size = 26,  face = "plain"),
+                              font.label = list(size = 10,  face = "plain"),
                               label.x = 0.9,
+                              label.y = 0.965,
                               ncol = 2, nrow = 3,
                               common.legend = TRUE,
                               legend = "top")
 
 # Annotate the combined plot
-annotate_figure(HumidPlotsColony,
+Colony_Humid_Full <- annotate_figure(HumidPlotsColony,
                 top = NULL,
                 bottom = text_grob("Number of workers / brood", color = "black",
-                                   size = 32, x = 0.5, y = 0.5),
+                                   size = 10, x = 0.5, y = 1.3),
                 left = NULL,
                 right = NULL
 )
+
+# Save plot as a PDF
+ggsave(file = "Fig4.tiff", plot = Colony_Humid_Full, width = 5.5, height = 5, units = "in", dpi = 300)
 
 #########################################################################################################################################
 # WORKER AND BROOD DEATH AND RELATIVE HUMIDITY: FINAL DATASET
@@ -659,23 +667,26 @@ MortalityPlots <- full_join(WorkerMortality, BroodMortality)
 # Scatter plots with humidity (%) on the x-axis and either worker and brood death on the y-axis (% less after trial 1)
 # Plot, axes, and legend titles are specified
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
-ggplot(MortalityPlots, aes(x = Humidity, y = ColonyDeath * 100, color = ColonyMember)) +
-  geom_point(size = 6, alpha = 0.66) +
+MortalityPlot <- ggplot(MortalityPlots, aes(x = Humidity, y = ColonyDeath * 100, color = ColonyMember)) +
+  geom_point(size = 1.75, alpha = 0.66) +
   xlab("Relative Humidity (%)") +
   ylab("Colony member death (%)") +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        axis.text = element_text(size = 22,  color = "black"),
-        axis.title.y = element_text(size = 22,  color = "black"),
-        axis.title.x = element_text(size = 22,  color = "black"),
-        legend.text = element_text(size = 22,  color = "black"),
-        legend.title = element_text(size = 22,  color = "black"),
+        axis.text = element_text(size = 12,  color = "black"),
+        axis.title.y = element_text(size = 12,  color = "black"),
+        axis.title.x = element_text(size = 12,  color = "black"),
+        legend.text = element_text(size = 12,  color = "black"),
+        legend.title = element_text(size = 12,  color = "black"),
         legend.position = "top",
         legend.direction = "horizontal",
         legend.key = element_blank()) +
   guides(color = guide_legend(title = "Colony Member")) +
   scale_color_manual(breaks = c("Brood", "Workers"), 
                      values = c("red", "blue"))
+
+# Save plot as a PDF
+ggsave(file = "S1_Fig.tiff", plot = MortalityPlot, width = 5, height = 5, units = "in", dpi = 300)
 
 # Generalized linear models that examine the relationship between % of ant and brood loss after trial 1 and exposed humidity (%)
 # Workers
@@ -717,16 +728,16 @@ anova(regBrood, regBrood1)
 
 # Scatter plot with regression lines from the models above
 BroodMortalityNumber <- ggplot(Complete_Size_Brood, aes(x = log(Number.Brood1), y = log(Number.Brood2))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   geom_smooth(method = lm, color = "red", se = FALSE, size = 1.33) +
   geom_abline(slope = 1, size = 1.33) + 
   xlab("Log avg. brood trial 1") +
   ylab("Log avg. brood trial 2") +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        axis.text = element_text(size = 22,  color = "black"),
-        axis.title.y = element_text(size = 22,  color = "black"),
-        axis.title.x = element_text(size = 22,  color = "black")) + 
+        axis.text = element_text(size = 12,  color = "black"),
+        axis.title.y = element_text(size = 12,  color = "black"),
+        axis.title.x = element_text(size = 12,  color = "black")) + 
   ylim(2, 7)
 
 # Workers
@@ -761,26 +772,29 @@ anova(regWork, regWork1)
 
 # Scatter plot with regression lines from the models above
 WorkerMortalityNumber <- ggplot(Complete_Size_Workers, aes(x = log(Number.Worker1), y = log(Number.Worker2))) +
-  geom_point(size = 6, alpha = 0.66) +
+  geom_point(size = 1.75, alpha = 0.66) +
   geom_smooth(method = lm, color = "red", se = FALSE, size = 1.33) +
   geom_abline(slope = 1, size = 1.33) + 
   xlab("Log avg. worker trial 1") +
   ylab("Log avg. worker trial 2") +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        axis.text = element_text(size = 22,  color = "black"),
-        axis.title.y = element_text(size = 22,  color = "black"),
-        axis.title.x = element_text(size = 22,  color = "black"))+ 
+        axis.text = element_text(size = 12,  color = "black"),
+        axis.title.y = element_text(size = 12,  color = "black"),
+        axis.title.x = element_text(size = 12,  color = "black"))+ 
   ylim(2, 7)
 
 # Arrange all plots relating the average number of workers and brood in both trials
-ggarrange(BroodMortalityNumber, WorkerMortalityNumber,
+ColSize_Plot <- ggarrange(BroodMortalityNumber, WorkerMortalityNumber,
           labels = c("(a)", "(b)"),
-          font.label = list(size = 26,  face = "plain"),
+          font.label = list(size = 12,  face = "plain"),
           label.x = 0.85,
           ncol = 2, nrow = 1,
           common.legend = TRUE,
           legend = "top")
+
+# Save plot as a PDF
+ggsave(file = "S2_Fig.tiff", plot = ColSize_Plot, width = 7.5, height = 3.5, units = "in", dpi = 300)
 
 #########################################################################################################################################
 # POROSITY COMPARISONS: PLOTS AND ANALYSES
@@ -813,23 +827,26 @@ PorosityComparisonBuilt <- PorosityComparison %>%
 # Brackets show significant "***" and non-significant "NS" Mann-Whitney U tests (found below)
 # Plot, axes, and legend titles are specified
 # Theme changes are used for editing the axes (text, ticks, and labels), plot title, and legend (text, title, position, and key)
-ggplot(PorosityComparison, aes(x = reorder(SubCategory, Porosity, FUN = median), y = Porosity)) +
+PorosityPlot <- ggplot(PorosityComparison, aes(x = reorder(SubCategory, Porosity, FUN = median), y = Porosity)) +
   geom_boxplot(coef = 200, lwd = 0.55) +
   geom_bracket(
     xmin = c("Sub I", "Sub I", "Sub I", "Sub II", "Built", "Built"), xmax = c("Sub II", "Natural", "Built", "Natural", "Sub II", "Natural"),
     y.position = c(90, 87, 84, 73, 77, 81), label = c("***", "***", "***", "NS", "NS", "NS"),
-    tip.length = 0.01, size = 0.65, label.size = 6) +
+    tip.length = 0.01, size = 0.65, label.size = 4) +
   ggtitle("Porosity comparison") +
   xlab("Substrate category") +
   ylab("Porosity (%)") +
   theme_pubclean() +
   theme(axis.ticks = element_blank(),
-        plot.title = element_text(size = 22,  color = "black", hjust = -0.1, vjust = 0),
-        axis.text = element_text(size = 22,  color = "black"),
-        axis.title.y = element_text(size = 22,  color = "black"),
-        axis.title.x = element_text(size = 22,  color = "black"))
+        plot.title = element_text(size = 12,  color = "black", hjust = -0.1, vjust = 0),
+        axis.text = element_text(size = 12,  color = "black"),
+        axis.title.y = element_text(size = 12,  color = "black"),
+        axis.title.x = element_text(size = 12,  color = "black"))
 
-# Kruskal-Wallis test to compare artificial and natural nest substrate porosities
+# Save plot as a PDF
+ggsave(file = "Fig5.tiff", plot = PorosityPlot, width = 5.2, height = 5.2, units = "in", dpi = 300)
+
+# Kruskal-Wallis test to compare artificial and natural nest substrate porosity
 kruskal.test(PorosityComparison$SubCategory, PorosityComparison$Porosity)
 
 # Post-hoc Dunn's test for multiple comparisons, using the Benjamini-Hockberg adjustment to control for family-wide error
