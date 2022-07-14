@@ -1,7 +1,6 @@
 # HumidityProject compendium
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Gchism94/HumidityProject/HEAD)
-[![DOI](https://zenodo.org/badge/511707834.svg)](https://zenodo.org/badge/latestdoi/511707834)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 A compendium of code, data, and author's manuscript accompanying the preprint:
