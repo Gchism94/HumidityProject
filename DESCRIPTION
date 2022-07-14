@@ -13,10 +13,7 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
 Imports: bookdown,
-    here,
-    knitr (>= 1.37),
-    pacman (>= 0.5.1),
-    rmarkdown (>= 2.13)
+    here
 Suggests: 
     devtools,
     git2r,
