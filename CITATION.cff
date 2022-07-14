@@ -1,0 +1,16 @@
+cff-version: 1.0.0
+message: "If you use materials from this repository, please cite it as below."
+authors:
+- family-names: "Chism"
+  given-names: "Greg"
+  orcid: "https://orcid.org/0000-0002-5478-2445"
+- family-names: "Faron"
+  given-names: "Wiley"
+- family-names: "Dornhaus"
+  given-names: "Anna"
+  orcid: "https://orcid.org/0000-0002-9809-7263"
+title: "HumidityProject"
+version: 1.0.0
+doi: 10.5281/zenodo.6836232
+date-released: 2022-07-14
+url: "https://github.com/Gchism94/HumidityProject"
