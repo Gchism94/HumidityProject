@@ -26,7 +26,7 @@ jobs:
           context: latest
           file: latest/Dockerfile
           push: true
-          tags: gchism94/nestarchorg:latest 
+          tags: gchism94/humidityproject:latest 
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
