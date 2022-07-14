@@ -1,3 +1,12 @@
+# README for R scripts used in _Temnothorax rugatulus_ ants do not change their nest walls in response to environmental humidity
+
+## Overview 
+R scripts used for manuscript: _Temnothorax rugatulus_ ants do not change their nest walls in response to environmental humidity 
+
+***
+
+## Purpose of the study 
+### The regulation of humidity is one purpose of ant nests. _Temnothorax rugatulus_ colonies modify their nests in rock crevices through walls build from environmental substrates. This study examines whether _T. rugatulus_ colonies change their built nest walls in response to environmental humidity. 
 
 
 ***
