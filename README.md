@@ -1,76 +1,55 @@
-# README for _Temnothorax rugatulus_ ants do not change their nest walls in response to environmental humidity
+# HumidityProject compendium
 
-## Overview 
-Data and R script used for manuscript: _Temnothorax rugatulus_ ants do not change their nest walls in response to environmental humidity 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Gchism94/HumidityProject/HEAD)
+[![DOI](https://zenodo.org/badge/511707834.svg)](https://zenodo.org/badge/latestdoi/511707834)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-***
+A compendium of code, data, and author's manuscript accompanying the preprint:
 
-## Purpose of the study 
-### The regulation of humidity is one purpose of ant nests. _Temnothorax rugatulus_ colonies modify their nests in rock crevices through walls build from environmental substrates. This study examines whether _T. rugatulus_ colonies change their built nest walls in response to environmental humidity. 
+#### Greg Chism, [![](https://orcid.org/sites/default/files/images/orcid_16x16.png)](https://orcid.org/0000-0002-5478-2445). *__Temnothorax rugatulus__ ants do not change their nest walls in response to environmental humidity*. Preprint on *bioRxiv*, 02 July 2022 <https://doi.org/10.1101/2022.06.30.497551
+>
 
-***
+To cite this repository use the following: 
 
-## Dependencies
-##### The run order for the scripts: 
-1. Humidity_Script.R - Script used to run all data wrangling, analyses, and generate plots for all but power simulations
-2. HumidPwrSim.R - Power simulations for linear mixed effects models concerning the effect of humidity and colony size on built nest wall properties
-##### The script "Humidity_Script.R" is executable so long as all data are loaded into the environment
-##### Several packages are required, however all are loaded through the package "pacman", so be certain to install this package before running any other code.
-##### See the following documentation for further information on the "pacman" package: https://www.rdocumentation.org/packages/pacman/versions/0.5.1 
+Chism, G., Nichols, W., & Dornhaus, A. (2022). NestArchOrg (Version 1.0.0) [Computer software]. https://doi.org/10.5281/zenodo.6828919
 
-***
+## Overview
+This repository is organized as a reproducible research compendium. 
+Click the [![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/cboettig/noise-phenomena/master?urlpath=rstudio) button above to explore in an interactive RStudio session.  Binder uses [rocker-project.org](https://rocker-project.org) Docker images to ensure a consistent and reproducible computational environment.  These Docker images can also be used locally.  
 
-## Structure of the data
-#### SupplementalHygrometerDatabase.csv
-###### Raw hygrometer data that is used to calculate the average environmental humidity and temperature for each Trial:Salt combination
-* Colony: Unique experimental colony identifiers 
-* TrialNumber: Sequential trial number (1-4) that is NOT unique for each colony - see "Trial"
-* Salt: Saturated salt solution used
-* "Date Time, GMT-07:00": Date and time of each observation  
-* Temp: Temperature in celcius
-* RH: Relative humidity (%) 
-* Trial: The trial number for each individual colony, each colony underwent two trials
+## File Organization
 
-***
+    analysis/
+    |
+    ├── paper/
+    │   ├── paper.Rmd       # this is the main document to edit
+    │   └── paper.pdf       # this is an elsevier .pdf written from paper.Rmd
+    |
+    ├── figures/            # location of the figures produced by the scripts in R
+    |
+    ├── data/
+    │   └── RawData/        # data obtained from elsewhere
+    |   
+    ├── supplementary-materials/
+    │   ├── Supplementary_Figures/     
+    |   |                   # supplementary figures for the main manuscript
+    │   └── Supplementary_Tables/      
+    |                       # supplementary tables for the main manuscript 
+    |
+    └── R                   # Run in the following order (also see associated README.md
+        ├── Humidity_Script.R
+        |                   # R script used to wrangle the raw data, produce figures, analyses, and supplementary materials
+        └── HumidPwrSim.R   # R script used to conduct all power analyses 
+        
 
-#### HumidityExperimentalDatabase.csv
-###### Raw experimental data with nest features and colony size
-* Colony: Unique experimental colony identifiers
-* Trial: The trial number for each individual colony, each colony underwent two trials
-* TrialNumber: Sequential trial number (1-4) that is NOT unique for each colony - see "Trial"
-* Day: The day in the experimental timeline (always 10, but days 1 and 5 were captured and not considered)
-* Area: Area of the built nest wall (mm<sup>2</sup>)
-* Length: Length of the built nest wall (mm)
-* Nest.Area: Area of the internal nest space (mm<sup>2</sup>)
-* HumLevel: Whether the colony started with a higher or lower relative humidity (High/Low)
-* Number.Ant: The number of workers in the colony
-* Number.Brood: The number of brood in the colony
-* Number.Queens: The number of brood in the colony
-* Salt: Saturated salt solution used
-* SubstrateISide: Substrate I placement in the container from the perspective of looking out from the nest entrance
-* StartWtI: The initial weight (g) of the available substrate I building nest wall material
-* UsedWtI: The weight (g) of the available substrate I building nest wall material following the experimental building phase
-* StartWtII: The initial weight (g) of the available substrate II building nest wall material
-* UsedWtII: The weight (g) of the available substrate II building nest wall material following the experimental building phase
-* CollWallWt: The weight (g) of the experimental nest wall that each colony built
+An `Rmd` notebook and associated pdf for the manuscript can be found in [analysis](/paper). This notebook produces a .pdf document in elsevier format.  
 
-***
+README.md files are included in all subdirectories with explanations or contents related to the paper. It should also provide a useful starting point for extending and exploring these materials for other projects.
 
-#### HumidMortalityRaw.csv
-###### Raw experimental data with proportion of workers and brood dead after each colony underwent Trial 1
-* Colony: Unique experimental colony identifiers
-* WorkerDeath: Proportion of workers that died 
-* BroodDeath: Proportion of brood that died 
-* TrialNumber: Sequential trial number (1-4) that is NOT unique for each colony
+Or to explore the code locally, clone or download this repository into RStudio or your preferred environment and install the compendium by running `devtools::install()`.  To install additional dependencies used only in formatting the figures, use `devtools::install(dep=TRUE)`.  
 
-***
 
-#### PorosityComparisonRaw.csv
-###### Data used for comparing the porosities of each experimental substrate, experimentally built walls, and collected _Temnothorax rugatulus_ walls
-###### Porosity is the percentage of void space in compact substrate - PoreVolume/TotalVolume
-* SubstrateID: A unique identifier for each substrate replicate
-* Trial: The trial number for each individual colony, each colony underwent two trials (only applicable for experimentally built walls) 
-* SubCategory: The type of substrate (Sub I, Sub II, Built, Natural)
-* TotalVolume: The combined pore (void space in compact substrate grains) and soil volume (ml) of a substrate
-* PoreVolume: The void space in between compact substrate grains (ml)
+This compendium includes data found on the Zenodo repository: 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6780270.svg)](https://doi.org/10.5281/zenodo.6780270)
+
 
