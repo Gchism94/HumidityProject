@@ -1,0 +1,23 @@
+Package: HumidityProject
+Title: "Research compendium for the project"
+Version: 0.0.0.9000
+Authors:
+    person(given = "Greg",
+           family = "Chism", "gchism@arizona.edu", role = c("aut", "cre"))
+Maintainer: Greg Chism <gchism@arizona.edu> 
+Description: Research comdendium for the project: Temnothorax rugatulus ants do not change their nest walls in response to environmental humidity
+License: GPLv3 + file LICENSE
+ByteCompile: true
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.0
+Imports: bookdown,
+    here
+Suggests: 
+    devtools,
+    git2r,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+URL: https://github.com/Gchism94/HumidityProject
+BugReports: https://github.com/Gchism94/HumidityProject/issues
