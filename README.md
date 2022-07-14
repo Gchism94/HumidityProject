@@ -4,7 +4,7 @@
 [![DOI](https://zenodo.org/badge/433160667.svg)](https://zenodo.org/badge/latestdoi/433160667)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-A compendium of code, data, and author's manuscript accompanying the preprint:
+## A compendium of code, data, and author's manuscript accompanying the preprint:
 
 #### Greg Chism, [![](https://orcid.org/sites/default/files/images/orcid_16x16.png)](https://orcid.org/0000-0002-5478-2445). *Temnothorax rugatulus ants do not change their nest walls in response to environmental humidity*. Preprint on *bioRxiv*, 02 July 2022 <https://doi.org/10.1101/2022.06.30.497551
 >
