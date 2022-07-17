@@ -1,5 +1,0 @@
-# Server Configuration File
-
-www-address=127.0.0.1
-rsession-which-r=/usr/local/bin/R
-auth-none=1
