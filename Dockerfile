@@ -5,6 +5,7 @@ FROM rocker/verse:3.6.3
 MAINTAINER Greg Chism <gchism@arizona.edu>
 
 COPY . /HumidityProject
+COPY . /home/rstudio/HumidityProject
 
 # go into the repo directory
 RUN . /etc/environment \
