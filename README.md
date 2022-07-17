@@ -1,6 +1,6 @@
 # HumidityProject compendium
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Gchism94/HumidityProject/HEAD)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Gchism94/HumidityProject/main?urlpath=rstudio)
 [![DOI](https://zenodo.org/badge/433160667.svg)](https://zenodo.org/badge/latestdoi/433160667)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
@@ -15,7 +15,7 @@ Chism, G., Faron, W., & Dornhaus, A. (2022). HumidityProject (Version 1.0.0) [Co
 
 ## Overview
 This repository is organized as a reproducible research compendium. 
-Click the [![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/Gchism94/HumidityProject/HEAD) button above to explore in an interactive RStudio session.  Binder uses [rocker-project.org](https://rocker-project.org) Docker images to ensure a consistent and reproducible computational environment.  These Docker images can also be used locally.  
+Click the [![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/Gchism94/HumidityProject/main?urlpath=rstudio) button above to explore in an interactive RStudio session.  Binder uses [rocker-project.org](https://rocker-project.org) Docker images to ensure a consistent and reproducible computational environment.  These Docker images can also be used locally.  
 
 ## File Organization
 
