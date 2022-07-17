@@ -4,13 +4,7 @@ FROM rocker/verse:3.6.3
 # required
 MAINTAINER Greg Chism <gchism@arizona.edu>
 
-## Copies your repo files into the Docker Container
-USER root
-COPY . ${HOME}
-RUN chown -R ${NB_USER} ${HOME}
-
-## Become normal user again
-USER ${NB_USER}
+COPY . /HumidityProject
 
 # go into the repo directory
 RUN . /etc/environment \
