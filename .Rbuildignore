@@ -1,2 +1,13 @@
+^Meta$
+^doc$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^README\.Rmd$
+^README-.*\.png$
+^CONDUCT\.md$
+^Dockerfile$
+^analysis/
+^CONTRIBUTING\.md$
+^LICENSE\.md$
+^\.github$
+^\.binder$
