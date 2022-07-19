@@ -13,6 +13,9 @@
 
 Chism, G., Faron, W., & Dornhaus, A. (2022). HumidityProject (Version 1.0.0) [Computer software]. https://doi.org/10.5281/zenodo.6836232
 
+This compendium includes data found on the Zenodo repository: 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6780270.svg)](https://doi.org/10.5281/zenodo.6780270)
+
 ## Overview
 This repository is organized as a reproducible research compendium. 
 Click the [![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/Gchism94/HumidityProject/main?urlpath=rstudio) button above to explore in an interactive RStudio session.  Binder uses [rocker-project.org](https://rocker-project.org) Docker images to ensure a consistent and reproducible computational environment.  These Docker images can also be used locally.  
@@ -48,8 +51,5 @@ README.md files are included in all subdirectories with explanations or contents
 
 Or to explore the code locally, clone or download this repository into RStudio or your preferred environment and install the compendium by running `devtools::install()`.  To install additional dependencies used only in formatting the figures, use `devtools::install(dep=TRUE)`.  
 
-
-This compendium includes data found on the Zenodo repository: 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6780270.svg)](https://doi.org/10.5281/zenodo.6780270)
 
 
