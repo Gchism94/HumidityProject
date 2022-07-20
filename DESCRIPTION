@@ -1,6 +1,6 @@
 Package: HumidityProject
 Title: "Research compendium for the project"
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors:
     person(given = "Greg",
            family = "Chism", "gchism@arizona.edu", role = c("aut", "cre"))
