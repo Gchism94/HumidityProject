@@ -199,15 +199,15 @@ SD = sqrt(n) * SE
 Beta.WorkerWt = d * SD
 
 # Set beta effect size new value in model fit
-fixef(fitWorker)["Number.Colony"] <- Beta.WorkerWt1
+fixef(fitWorker)["Number.Colony"] <- Beta.WorkerWt
 
 # Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
 # Brood
-powerSim(fitBrood, nsim = 200, progress = FALSE)
+WallWtBrood <- powerSim(fitBrood, nsim = 200, progress = FALSE)
 
 # Power simulation, 200 simulations, uses the likelihood ratio test for simulated p-values, does not show progress of simulations
 # Workers
-powerSim(fitWorker, nsim = 200, progress = FALSE)
+WallWtWorker <- powerSim(fitWorker, nsim = 200, progress = FALSE)
 
 WallWtBrood
 

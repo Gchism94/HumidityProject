@@ -16,6 +16,7 @@ install.packages("pacman") # Download package with function to load multiple pac
 # Loading required packages for code below. p_load() will download packages that aren't in system library
 pacman::p_load(FSA,
                ggpubr,
+               here,
                lme4,
                lmerTest,
                MuMIn,
@@ -26,7 +27,7 @@ pacman::p_load(FSA,
 #########################################################################################################################################
 # IMPORTING THE REQUIRED DATASETS TO RUN THE BELOW SCRIPTS
 #########################################################################################################################################
-here()
+
 # Main database with nest wall properties
 HumidityExperimentalDatabase <- read.csv(here("analysis", "data", "raw_data", "HumidityExperimentalDatabase.csv"))
 
@@ -96,7 +97,7 @@ Complete_Data_final_Trial2 <- HumidityExperimentalDatabase %>%
 
 # Full join data for plots & analyses
 Complete_Data_Final <- full_join(Complete_Data_final_Trial1, Complete_Data_final_Trial2)
-
+write.csv(Complete_Data_Final, "Complete_Data_Final.csv", row.names = F)
 #########################################################################################################################################
 # RATIO OF SUBSTRATE II USED
 # The script below used one-sample Wilcoxon tests to see if a building substrate or substrate placement (left / right) was different than 0.5
