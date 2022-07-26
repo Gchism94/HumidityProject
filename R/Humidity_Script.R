@@ -1,13 +1,13 @@
 #########################################################################################################################################
 # Author: GREG CHISM
-# Date: APR 2022
+# Date: JULY 2022
 # email: gchism@arizona.edu
 # Project: "Temnothorax rugatulus" ants do not change their nest walls in response to environmental humidity
 # Title: Humidity, colony percentage death, porosity data grooming, visualization, and analyses
 #########################################################################################################################################
 
 # The below script was utilized to analyze and visualize data from the associated manuscript.
-# The associated databases are "HumidityExperimentDatabase.csv", "SupplementalHygrometerDatabase.csv", "and"HumidMortality.csv", and "PorosityComparison.csv"
+# See the README.md file and run everything from SETUP.R before running the code below
 
 # MUST RUN THE NEXT TWO LINES (PARTICULARLY PACMAN) BEFORE ANY OTHER!
 # Installing and loading packages used for graphs and analyses
