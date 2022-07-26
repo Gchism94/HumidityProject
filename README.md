@@ -21,24 +21,25 @@ Click the [![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2
 
 ## File Organization
 
-    analysis/
-    |
-    ├── paper/
-    │   ├── paper.Rmd       # this is the main document to edit
-    │   └── paper.pdf       # this is an elsevier .pdf written from paper.Rmd
-    |
-    ├── figures/            # location of the figures produced by the scripts in R
-    |
-    ├── data/
-    │   └── RawData/        # data obtained from elsewhere
-    |   
-    ├── supplementary-materials/
-    │   ├── Supplementary_Figures/     
-    |   |                   # supplementary figures for the main manuscript
-    │   └── Supplementary_Tables/      
-    |                       # supplementary tables for the main manuscript 
-    |
-    └── R                   # Run in the following order (also see associated README.md
+        analysis/
+        |
+        ├── paper/
+        │   ├── paper.Rmd       # this is the main document to edit
+        │   └── paper.pdf       # this is an elsevier .pdf written from paper.Rmd
+        |
+        ├── figures/            # location of the figures produced by the scripts in R
+        |
+        ├── data/
+        │   └── RawData/        # data obtained from elsewhere
+        |   
+        └── supplementary-materials/
+            ├── Supplementary_Figures/     
+            |                   # supplementary figures for the main manuscript
+            └── Supplementary_Tables/      
+                                # supplementary tables for the main manuscript 
+        
+        R/                  # Run in the following order (also see associated README.md
+        | 
         ├── Humidity_Script.R
         |                   # R script used to wrangle the raw data, produce figures, analyses, and supplementary materials
         └── HumidPwrSim.R   # R script used to conduct all power analyses 
