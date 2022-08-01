@@ -25,7 +25,7 @@ Click the [![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2
         |
         ├── paper/
         │   ├── paper.Rmd       # this is the main document to edit
-        │   └── paper.pdf       # this is an elsevier .pdf written from paper.Rmd
+        │   └── paper.html      # this is a distill R package produced .html from paper.Rmd for electronic reading
         |
         ├── figures/            # location of the figures produced by the scripts in R
         |
